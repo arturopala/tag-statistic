@@ -26,7 +26,7 @@ public class TagStatisticSetTest {
 
   @Test
   public void shouldCalculateTagShare() {
-    TagStatistic<String> tags = new TagStatisticSet<>();
+    TagStatisticSet<String> tags = new TagStatisticSet<>();
     tags.increment("bas");
     tags.increment("bas");
     tags.increment("foo");

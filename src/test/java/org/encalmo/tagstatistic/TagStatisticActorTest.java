@@ -11,7 +11,7 @@ public class TagStatisticActorTest {
     tags.increment("bas");
     assertSame(tags.top());
     try {
-      Thread.sleep(200);
+      Thread.sleep(10);
     } catch (InterruptedException e) {
     }
     assertSame(tags.top(), "bas");

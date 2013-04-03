@@ -5,6 +5,4 @@ public interface TagStatistic<T> {
 
   Iterable<T> top();
 
-  double shareOf(T tag);
-
 }

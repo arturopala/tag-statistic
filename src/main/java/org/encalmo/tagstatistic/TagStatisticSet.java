@@ -45,7 +45,6 @@ class TagStatisticSet<T> implements TagStatistic<T> {
     return top.get();
   }
 
-  @Override
   public double shareOf(T tag) {
     Element<T> elem = tags.get(tag);
     if (elem != null) {

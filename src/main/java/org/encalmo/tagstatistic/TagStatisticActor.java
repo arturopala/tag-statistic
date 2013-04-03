@@ -45,9 +45,4 @@ public class TagStatisticActor<T> implements TagStatistic<T> {
   public Iterable<T> top() {
     return tags.top();
   }
-
-  @Override
-  public double shareOf(T tag) {
-    return tags.shareOf(tag);
-  }
 }
