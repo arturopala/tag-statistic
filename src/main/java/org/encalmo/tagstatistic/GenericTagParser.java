@@ -33,9 +33,13 @@ public class GenericTagParser implements TagParser {
     }
 
     protected void registerTagOccurrence(CharBuffer buffer, TagStatistic<String> statistic) {
-        String tag = pollTag(buffer);
-        if(tag.length()>=5){
-         statistic.increment(tag);
+        if(buffer.remaining()>0){
+            String tag = pollTag(buffer);
+            if(tag.length()>=5){
+             statistic.increment(tag);
+            }
+        } else {
+            buffer.clear();
         }
     }
 
@@ -46,8 +50,6 @@ public class GenericTagParser implements TagParser {
     protected void rememberCharacter(char ch, CharBuffer buffer) {
         if(buffer.remaining()>0){
             buffer.put(ch);
-        } else {
-            buffer.clear();
         }
     }
 
