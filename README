@@ -2,17 +2,17 @@
 The application maintain a real time in memory version of the Top 10 Tag list. 
 The user can query the real time version of the list thorough a socket connection.
 
-Usage:
+1. Usage:
 
 java -cp tagstats.jar org.encalmo.tagstats.TagStatsApp -p {port} -d {base directory} [-t {threads}]
 
-Options:
+2. Options:
 
 -p Telnet port number on which the application would serve real time tag query requests.
 -d Relative or absolute path to base directory to scan for text files.
 -t (optional) Number of parallel threads dedicated to parsing files
 
-Features:
+3. Features:
 
 The application processes multiple files at the same time.
 Tags are composed by a mix of letters and numbers and dash “-“. (Eg: 12313, abc123, 66-route, 66route,).
@@ -26,7 +26,7 @@ The application accepts multiple connections on port specified (as a command lin
 When the connection is made, the application prints the top 10 tag list (line by line) sorted in descending 
 order based on the number of occurrences and closes the connection immediately.
 
-Architecture:
+4. Architecture:
 
 TagStatsApp application consists of several components working together in a multi-threaded, non-blocking, asynchronous way achieved using "Actor" pattern and few interfaces.
 
@@ -49,8 +49,13 @@ Components:
 - DirectoryWatchService observes base directory and notifies FileParserActor about new files to parse.
 - NonBlockingServer serves at dedicated network socket top10 stats obtained from TagStatsSet.
 
-Repository:
+5. Repository and build
 
-https://github.com/arturopala/tag-statistic.git
+Code source: https://github.com/arturopala/tag-statistic.git
+
+Application is build using standard maven commands.
+More info: http://maven.apache.org/guides/getting-started/index.html
+
+
 
 
