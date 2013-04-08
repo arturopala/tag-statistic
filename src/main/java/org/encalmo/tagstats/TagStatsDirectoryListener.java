@@ -22,6 +22,7 @@ public class TagStatsDirectoryListener extends SimpleFileEventListener {
     while (!fileParserActor.isQueueEmpty()) {
       Thread.sleep(500);
     }
+    System.out.println("\r\nTop 10 tags:\r\n-------------------");
     for (String tag : tags.top()) {
       System.out.println(tag);
     }

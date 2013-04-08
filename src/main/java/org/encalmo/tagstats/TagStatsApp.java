@@ -12,6 +12,12 @@ public class TagStatsApp implements TagStats<String> {
   private final DirectoryWatchService watch;
   private final TagStatsActor<String> tagStatsActor;
 
+  public InetSocketAddress getAddress() {
+    return address;
+  }
+
+  private final InetSocketAddress address;
+
   public static void main(String[] args) throws Exception {
     if (args.length >= 4) {
       Properties p = new Properties();
@@ -43,7 +49,8 @@ public class TagStatsApp implements TagStats<String> {
       threads = Runtime.getRuntime().availableProcessors() * 2;
     }
 
-    final InetSocketAddress address = new InetSocketAddress(port);
+    address = new InetSocketAddress(port);
+
     final Path path = FileSystems.getDefault().getPath(directory);
     final Charset charset = Charset.defaultCharset();
     final TagStatsSet<String> tags = new TagStatsSet<>();
