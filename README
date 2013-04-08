@@ -51,9 +51,9 @@ Components:
 
 5. Repository and build
 
-Code source: https://github.com/arturopala/tag-statistic.git
+Code source available at https://github.com/arturopala/tag-statistic.git
 
-Application is build using standard maven commands.
+Application is build and tested using standard maven commands: mvn clean install
 More info: http://maven.apache.org/guides/getting-started/index.html
 
 
