@@ -8,6 +8,13 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 
+/**
+ * “Tag Stats” application reading and parsing multiple text files and finding the Top 10 frequently occurring words (tags).
+ * The application maintain a real time in memory version of the Top 10 Tag list.
+ * The user can query the real time version of the list thorough a socket connection.
+ * <p/>
+ * TagStatsApp acts as a main entry point and all components assembler.
+ */
 public class TagStatsApp implements TagStats<String>, TagParser, FileParser {
   private final NonBlockingServer server;
   private final DirectoryWatchService watch;

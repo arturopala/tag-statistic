@@ -2,7 +2,10 @@ package org.encalmo.tagstats;
 
 import java.nio.file.Path;
 
-public interface FileParser {
 
-    void parse(Path path);
+/**
+ * FileParser is an interface of components parsing files.
+ */
+public interface FileParser {
+  void parse(Path path);
 }
