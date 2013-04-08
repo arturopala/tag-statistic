@@ -1,5 +1,6 @@
 package org.encalmo.tagstats;
 
+import java.io.Reader;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
@@ -7,10 +8,12 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 
-public class TagStatsApp implements TagStats<String> {
+public class TagStatsApp implements TagStats<String>, TagParser, FileParser {
   private final NonBlockingServer server;
   private final DirectoryWatchService watch;
   private final TagStatsActor<String> tagStatsActor;
+  private final FileParserActor fileParserActor;
+  private final TagParserActor tagParserActor;
 
   public InetSocketAddress getAddress() {
     return address;
@@ -58,8 +61,8 @@ public class TagStatsApp implements TagStats<String> {
     this.tagStatsActor = new TagStatsActor<>(tags);
 
     final TagParser parser = new GenericTagParser(tagStatsActor);
-    final TagParserActor tagParserActor = new TagParserActor(parser, threads);
-    final FileParserActor fileParserActor = new FileParserActor(tagParserActor);
+    this.tagParserActor = new TagParserActor(parser, threads);
+    this.fileParserActor = new FileParserActor(tagParserActor);
     this.server = new NonBlockingServer(address, new TagStatsServerListener(tags, charset));
     this.watch = new DirectoryWatchService(path, new TagStatsDirectoryListener(fileParserActor, tags));
   }
@@ -82,5 +85,15 @@ public class TagStatsApp implements TagStats<String> {
   @Override
   public Iterable<String> top() {
     return tagStatsActor.top();
+  }
+
+  @Override
+  public void parse(Path path) {
+    fileParserActor.parse(path);
+  }
+
+  @Override
+  public void parse(Reader reader) {
+    tagParserActor.parse(reader);
   }
 }
