@@ -1,4 +1,4 @@
-“Tag Stats” application reads and parses multiple text files and finds the Top 10 frequently occurring words (tags). 
+“Tag Stats” application reads and parses concurrently multiple text files and finds the Top 10 frequently occurring words (tags). 
 The application maintain a real time in memory version of the Top 10 Tag list. 
 The user can query the real time version of the list thorough a socket connection.
 
