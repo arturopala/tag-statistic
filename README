@@ -1,6 +1,4 @@
-“Tag Stats” application reads and parses concurrently multiple text files and finds the Top 10 frequently occurring words (tags).
-The application maintain a real time in memory version of the Top 10 Tag list. 
-The user can query the real time version of the list thorough a socket connection.
+"Top Ten Tags" application reads and parses in parallel multiple text files and maintains the Top 10 frequently occurring words (tags), user can query the real time version of the Top10 list thorough a multiplexed socket connection.
 
 1. Usage (requires at least Java 7 JRE or SDK)
 
