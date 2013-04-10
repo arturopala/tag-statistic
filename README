@@ -28,8 +28,7 @@ order based on the number of occurrences and closes the connection immediately.
 
 4. Architecture:
 
-TagStatsApp application consists of several components working together in a multi-threaded, non-blocking, 
-asynchronous way achieved using "Actor" pattern and few interfaces.
+TagStatsApp application consists of several components working together in a multi-threaded, non-blocking, asynchronous way achieved using "Actor" pattern and few interfaces.
 
 Interfaces:
 - TagStats<T> is an interface of components gathering tags and providing top stats.
