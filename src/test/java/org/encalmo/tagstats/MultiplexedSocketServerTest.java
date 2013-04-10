@@ -13,7 +13,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class SocketServerTest {
+public class MultiplexedSocketServerTest {
 
     @Test
     public void shouldOpenSocketAndListen() throws Exception {
@@ -21,7 +21,7 @@ public class SocketServerTest {
         final Charset charset = Charset.defaultCharset();
         final String message = "Hello, World!";
         final AtomicReference<String> result = new AtomicReference<>();
-        SocketServer server = new SocketServer(address, new SocketServerListener() {
+        MultiplexedSocketServer server = new MultiplexedSocketServer(address, new SocketServerListener() {
             @Override
             public void read(SelectionKey key) throws Exception {
                 SocketChannel channel = (SocketChannel) key.channel();

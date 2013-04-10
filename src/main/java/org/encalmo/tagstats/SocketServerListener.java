@@ -4,7 +4,7 @@ import java.nio.channels.SelectionKey;
 
 
 /**
- * SocketServerListener is an interface complementing {@link SocketServer}
+ * SocketServerListener is an interface complementing {@link MultiplexedSocketServer}
  */
 public interface SocketServerListener {
     /**

@@ -29,7 +29,7 @@ import java.util.Properties;
  * </ul>
  */
 public class TagStatsApp implements TagStats<String>, TagParser, FileParser {
-    private final SocketServer server;
+    private final MultiplexedSocketServer server;
     private final DirectoryScanAndWatch watch;
     private final TagStatsActor<String> tagStatsActor;
     private final FileParserActor fileParserActor;
@@ -83,7 +83,7 @@ public class TagStatsApp implements TagStats<String>, TagParser, FileParser {
         final TagParser parser = new GenericTagParser(tagStatsActor);
         this.tagParserActor = new TagParserActor(parser, threads);
         this.fileParserActor = new FileParserActor(tagParserActor);
-        this.server = new SocketServer(address, new TagStatsServerListener(tags, charset));
+        this.server = new MultiplexedSocketServer(address, new TagStatsServerListener(tags, charset));
         this.watch = new DirectoryScanAndWatch(path, new TagStatsDirectoryListener(fileParserActor, tags));
     }
 
