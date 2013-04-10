@@ -14,6 +14,19 @@ import java.util.Properties;
  * The user can query the real time version of the list thorough a socket connection.
  * <p/>
  * TagStatsApp acts as a main entry point and all components assembler.
+ * <ul>
+ * <li> The application processes multiple files at the same time.
+ * <li> Tags are composed by a mix of letters and numbers and dash “-“. (Eg: 12313, abc123, 66-route, 66route,).
+ * <li> Tags can also be numbers or a mix of letters and numbers. (Eg: 12313, abc123, 66route).
+ * <li> The plural version of a word are counted as a separate tag. Eg: Bottle and Bottles are two different tags.
+ * <li> Symbols, Space or punctuation marks are counted as tags.
+ * <li> New lines, carriage returns, tabs and any white space are excluded.
+ * <li> When the application completes processing it writes to standard output the top 10 tag list (neatly formatted)
+ * <li> sorted in descending order based on number of occurrences.
+ * <li> The application accepts multiple connections on port specified (as a command line parameter, -p).
+ * <li> When the connection is made, the application prints the top 10 tag list (line by line) sorted in descending
+ * <li> order based on the number of occurrences and closes the connection immediately.
+ * </ul>
  */
 public class TagStatsApp implements TagStats<String>, TagParser, FileParser {
   private final NonBlockingServer server;

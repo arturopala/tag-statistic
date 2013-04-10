@@ -9,6 +9,12 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 
+/**
+ * NonBlockingServer is a general purpose component encapsulating
+ * multiplexed ServerSocketChannel handling complexity behind simpler {@link ServerSocketListener}.
+ * <p/>
+ * This component is a {@link SingleThreadService} running in a separate thread.
+ */
 public class NonBlockingServer extends SingleThreadService {
   private final InetSocketAddress address;
   private final ServerSocketListener listener;

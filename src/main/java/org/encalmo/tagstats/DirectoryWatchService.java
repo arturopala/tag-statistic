@@ -10,6 +10,12 @@ import java.nio.file.WatchService;
 import java.util.List;
 
 
+/**
+ * DirectoryWatchService is a general purpose component
+ * encapsulating directory watching complexity behind simpler {@link FileEventListener}
+ * <p/>
+ * This component is a {@link SingleThreadService} running in a separate thread.
+ */
 public class DirectoryWatchService extends SingleThreadService {
   private final Path path;
   private final WatchService watchService;
@@ -69,12 +75,13 @@ public class DirectoryWatchService extends SingleThreadService {
             for (WatchEvent event : events) {
               try {
                 WatchEvent.Kind kind = event.kind();
+                Path file = this.path.resolve((Path) event.context());
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-                  listener.fileCreated((Path) event.context());
+                  listener.fileCreated(file);
                 } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-                  listener.fileModified((Path) event.context());
+                  listener.fileModified(file);
                 } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-                  listener.fileDeleted((Path) event.context());
+                  listener.fileDeleted(file);
                 }
               } catch (Exception e) {
                 e.printStackTrace();

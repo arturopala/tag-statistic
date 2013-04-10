@@ -8,6 +8,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 
+/**
+ * FileParserActor encapsulates TagParserActor and acts as a proxy
+ * responsible of queueing and opening files before they reach the TagParserActor.
+ */
 public class FileParserActor extends Actor<Path> implements FileParser {
   private final TagParser parser;
 
@@ -29,7 +33,10 @@ public class FileParserActor extends Actor<Path> implements FileParser {
   protected void react(Path path) throws Exception {
     if (Files.isReadable(path)) {
       Reader reader = Files.newBufferedReader(path, Charset.defaultCharset());
+      System.out.println("new file to parse: " + path);
       parser.parse(reader);
+    } else {
+      System.err.println("File " + path + " is not readable! Cannot parse tags.");
     }
   }
 }
