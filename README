@@ -53,8 +53,8 @@ Components:
   keeping them open too long.
 - FileParserActor encapsulates TagParserActor and acts as a proxy responsible of queueing and opening files 
   before they reach the TagParserActor.
-- DirectoryWatchService observes base directory and notifies FileParserActor about new files to parse.
-- NonBlockingServer serves at dedicated network socket top10 stats obtained from TagStatsSet.
+- DirectoryWatchAndScan observes base directory and notifies FileParserActor about new files to parse.
+- SocketServer serves at dedicated network socket top10 stats obtained from TagStatsSet.
 
 5. Repository and build
 

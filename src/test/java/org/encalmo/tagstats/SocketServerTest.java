@@ -13,7 +13,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class NonBlockingServerTest {
+public class SocketServerTest {
 
     @Test
     public void shouldOpenSocketAndListen() throws Exception {
@@ -21,7 +21,7 @@ public class NonBlockingServerTest {
         final Charset charset = Charset.defaultCharset();
         final String message = "Hello, World!";
         final AtomicReference<String> result = new AtomicReference<>();
-        NonBlockingServer server = new NonBlockingServer(address, new ServerSocketListener() {
+        SocketServer server = new SocketServer(address, new SocketServerListener() {
             @Override
             public void read(SelectionKey key) throws Exception {
                 SocketChannel channel = (SocketChannel) key.channel();
@@ -40,7 +40,7 @@ public class NonBlockingServerTest {
                 key.interestOps(SelectionKey.OP_READ);
             }
         });
-        NonBlockingClient client = new NonBlockingClient(address, new ClientSocketListener() {
+        SocketClient client = new SocketClient(address, new SocketClientListener() {
             @Override
             public void connected(SelectionKey key) throws Exception {
                 SocketChannel channel = (SocketChannel) key.channel();

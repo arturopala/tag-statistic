@@ -29,91 +29,91 @@ import java.util.Properties;
  * </ul>
  */
 public class TagStatsApp implements TagStats<String>, TagParser, FileParser {
-  private final NonBlockingServer server;
-  private final DirectoryWatchService watch;
-  private final TagStatsActor<String> tagStatsActor;
-  private final FileParserActor fileParserActor;
-  private final TagParserActor tagParserActor;
+    private final SocketServer server;
+    private final DirectoryScanAndWatch watch;
+    private final TagStatsActor<String> tagStatsActor;
+    private final FileParserActor fileParserActor;
+    private final TagParserActor tagParserActor;
 
-  public InetSocketAddress getAddress() {
-    return address;
-  }
-
-  private final InetSocketAddress address;
-
-  public static void main(String[] args) throws Exception {
-    if (args.length >= 4) {
-      Properties p = new Properties();
-      p.setProperty(args[0], args[1]);
-      p.setProperty(args[2], args[3]);
-      if (args.length >= 6) {
-        p.setProperty(args[4], args[5]);
-      }
-
-      int port = Integer.parseInt(p.getProperty("-p"));
-      String directory = p.getProperty("-d");
-      int threads = Integer.parseInt(p.getProperty("-t", "0"));
-      TagStatsApp app = new TagStatsApp(port, directory, threads);
-      app.start();
-      for (;;) {
-        Thread.sleep(60000);
-      }
-    } else {
-      throw new AssertionError("Usage: java -cp tagstats.jar " + TagStatsApp.class.getName() +
-        " -p {port} -d {base directory} [-t {threads}]");
-    }
-  }
-
-  public TagStatsApp(int port, String directory, int threads) throws Exception {
-    if (directory == null) {
-      throw new AssertionError("directory path must not be null");
-    }
-    if (threads <= 0) {
-      threads = Runtime.getRuntime().availableProcessors() * 2;
+    public InetSocketAddress getAddress() {
+        return address;
     }
 
-    address = new InetSocketAddress(port);
+    private final InetSocketAddress address;
 
-    final Path path = FileSystems.getDefault().getPath(directory);
-    final Charset charset = Charset.defaultCharset();
-    final TagStatsSet<String> tags = new TagStatsSet<>();
+    public static void main(String[] args) throws Exception {
+        if (args.length >= 4) {
+            Properties p = new Properties();
+            p.setProperty(args[0], args[1]);
+            p.setProperty(args[2], args[3]);
+            if (args.length >= 6) {
+                p.setProperty(args[4], args[5]);
+            }
 
-    this.tagStatsActor = new TagStatsActor<>(tags);
+            int port = Integer.parseInt(p.getProperty("-p"));
+            String directory = p.getProperty("-d");
+            int threads = Integer.parseInt(p.getProperty("-t", "0"));
+            TagStatsApp app = new TagStatsApp(port, directory, threads);
+            app.start();
+            for (; ; ) {
+                Thread.sleep(60000);
+            }
+        } else {
+            throw new AssertionError("Usage: java -cp {tagstats.jar} " + TagStatsApp.class.getName() +
+                    " -p {port} -d {base directory} [-t {threads}]");
+        }
+    }
 
-    final TagParser parser = new GenericTagParser(tagStatsActor);
-    this.tagParserActor = new TagParserActor(parser, threads);
-    this.fileParserActor = new FileParserActor(tagParserActor);
-    this.server = new NonBlockingServer(address, new TagStatsServerListener(tags, charset));
-    this.watch = new DirectoryWatchService(path, new TagStatsDirectoryListener(fileParserActor, tags));
-  }
+    public TagStatsApp(int port, String directory, int threads) throws Exception {
+        if (directory == null) {
+            throw new AssertionError("directory path must not be null");
+        }
+        if (threads <= 0) {
+            threads = Runtime.getRuntime().availableProcessors() * 2;
+        }
 
-  public synchronized void start() throws Exception {
-    server.start();
-    watch.start();
-  }
+        address = new InetSocketAddress(port);
 
-  public synchronized void stop() throws Exception {
-    watch.stop();
-    server.stop();
-  }
+        final Path path = FileSystems.getDefault().getPath(directory);
+        final Charset charset = Charset.defaultCharset();
+        final TagStatsSet<String> tags = new TagStatsSet<>();
 
-  @Override
-  public void increment(String tag) {
-    tagStatsActor.increment(tag);
-  }
+        this.tagStatsActor = new TagStatsActor<>(tags);
 
-  @Override
-  public Iterable<String> top() {
-    return tagStatsActor.top();
-  }
+        final TagParser parser = new GenericTagParser(tagStatsActor);
+        this.tagParserActor = new TagParserActor(parser, threads);
+        this.fileParserActor = new FileParserActor(tagParserActor);
+        this.server = new SocketServer(address, new TagStatsServerListener(tags, charset));
+        this.watch = new DirectoryScanAndWatch(path, new TagStatsDirectoryListener(fileParserActor, tags));
+    }
 
-  @Override
-  public void parse(Path path) {
-    fileParserActor.parse(path);
-  }
+    public synchronized void start() throws Exception {
+        server.start();
+        watch.start();
+    }
 
-  @Override
-  public void parse(Reader reader) {
-    tagParserActor.parse(reader);
-  }
+    public synchronized void stop() throws Exception {
+        watch.stop();
+        server.stop();
+    }
+
+    @Override
+    public void increment(String tag) {
+        tagStatsActor.increment(tag);
+    }
+
+    @Override
+    public Iterable<String> top() {
+        return tagStatsActor.top();
+    }
+
+    @Override
+    public void parse(Path path) {
+        fileParserActor.parse(path);
+    }
+
+    @Override
+    public void parse(Reader reader) {
+        tagParserActor.parse(reader);
+    }
 }

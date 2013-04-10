@@ -8,14 +8,14 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NonBlockingClient extends SingleThreadService {
+public class SocketClient extends SingleThreadService {
 
     private final InetSocketAddress address;
-    private final ClientSocketListener listener;
+    private final SocketClientListener listener;
     private Selector selector;
     private SocketChannel socketChannel;
 
-    public NonBlockingClient(InetSocketAddress address, ClientSocketListener listener) {
+    public SocketClient(InetSocketAddress address, SocketClientListener listener) {
         this.address = address;
         this.listener = listener;
     }
