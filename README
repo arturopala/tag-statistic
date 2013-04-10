@@ -2,9 +2,9 @@
 The application maintain a real time in memory version of the Top 10 Tag list. 
 The user can query the real time version of the list thorough a socket connection.
 
-1. Usage:
+1. Usage (requires at least Java 7 JRE or SDK)
 
-java -cp tagstats.jar org.encalmo.tagstats.TagStatsApp -p {port} -d {base directory} [-t {threads}]
+java -cp {tagstats.jar} org.encalmo.tagstats.TagStatsApp -p {port} -d {base directory} [-t {threads}]
 
 2. Options:
 
