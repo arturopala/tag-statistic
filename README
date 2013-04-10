@@ -1,4 +1,5 @@
-“Tag Stats” application reads and parses concurrently multiple text files and finds the Top 10 frequently occurring words (tags). 
+“Tag Stats” application reads and parses concurrently multiple text files 
+and finds the Top 10 frequently occurring words (tags). 
 The application maintain a real time in memory version of the Top 10 Tag list. 
 The user can query the real time version of the list thorough a socket connection.
 
@@ -28,7 +29,8 @@ order based on the number of occurrences and closes the connection immediately.
 
 4. Architecture:
 
-TagStatsApp application consists of several components working together in a multi-threaded, non-blocking, asynchronous way achieved using "Actor" pattern and few interfaces.
+TagStatsApp application consists of several components working together in a multi-threaded, non-blocking, 
+asynchronous way achieved using "Actor" pattern and few interfaces.
 
 Interfaces:
 - TagStats<T> is an interface of components gathering tags and providing top stats.
@@ -36,16 +38,21 @@ Interfaces:
 - FileParser is an interface of components parsing files.
 
 Abstract classes:
-- Actor is a base abstract class of all asynchronous components, encapsulates message queue and multi-threaded execution details
-- SingleThreadService is a base abstract class of manageable services running in the single dedicated thread, encapsulates stop/start execution details
+- Actor is a base abstract class of all asynchronous components, 
+  encapsulates message queue and multi-threaded execution details
+- SingleThreadService is a base abstract class of manageable services running in the single dedicated thread, 
+  encapsulates stop/start execution details
 
 Components:
 - TagStatsApp acts as a main entry point and all components assembler.
 - TagStatsSet maintains in-memory doubly-linked ordered list of tags and current top10 stats.
-- TagStatsActor encapsulates TagStatsSet and process all inserts using long queue and single thread to avoid synchronization of concurrent inserts inside TagStatsSet.
+- TagStatsActor encapsulates TagStatsSet and process all inserts using long queue and single thread to avoid 
+  synchronization of concurrent inserts inside TagStatsSet.
 - GenericTagParser parses stream of characters into tags and updates TagStatsSet on the go.
-- TagParserActor encapsulates GenericTagParser and processes streams using multiple-threads and short queue to avoid keeping them open too long.
-- FileParserActor encapsulates TagParserActor and acts as a proxy responsible of queueing and opening files before they reach the TagParserActor.
+- TagParserActor encapsulates GenericTagParser and processes streams using multiple-threads and short queue to avoid 
+  keeping them open too long.
+- FileParserActor encapsulates TagParserActor and acts as a proxy responsible of queueing and opening files 
+  before they reach the TagParserActor.
 - DirectoryWatchService observes base directory and notifies FileParserActor about new files to parse.
 - NonBlockingServer serves at dedicated network socket top10 stats obtained from TagStatsSet.
 
