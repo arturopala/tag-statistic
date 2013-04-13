@@ -1,4 +1,4 @@
-"Top Ten Tags" application reads and parses in parallel multiple text files and maintains the Top N frequently occurring words (tags), user can query the real time version of the TopN list thorough a multiplexed socket connection or an API.
+"Top N Tags" application reads and parses in parallel multiple text files and maintains the Top N frequently occurring words (tags), user can query the real time version of the Top N list thorough a multiplexed socket connection or an API.
 
 1. Usage (requires at least Java 7 JRE or SDK)
 
