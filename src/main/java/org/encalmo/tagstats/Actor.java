@@ -12,60 +12,60 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @param <T> type of supported messages
  */
 public abstract class Actor<T> {
-  private final Executor executor;
-  private final BlockingQueue<T> queue;
+    private final Executor executor;
+    private final BlockingQueue<T> queue;
 
-  private final Runnable consumer = new Runnable() {
-    @Override
-    public void run() {
-      try {
-        T message = queue.take();
-        react(message);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+    private final Runnable consumer = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                T message = queue.take();
+                react(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    protected Actor(Executor executor, int queueSize) {
+        this.executor = executor;
+        this.queue = new LinkedBlockingQueue<>(queueSize);
     }
-  };
 
-  protected Actor(Executor executor, int queueSize) {
-    this.executor = executor;
-    this.queue = new LinkedBlockingQueue<>(queueSize);
-  }
+    /**
+     * Reaction at the message should be implemented here
+     *
+     * @param message message to be processed
+     * @throws Exception
+     */
+    protected abstract void react(T message) throws Exception;
 
-  /**
-   * Reaction at the message should be implemented here
-   *
-   * @param message
-   * @throws Exception
-   */
-  protected abstract void react(T message) throws Exception;
-
-  /**
-   * Puts this message at the end of the queue
-   *
-   * @param message
-   */
-  protected final void enqueue(T message) {
-    try {
-      queue.put(message);
-      executor.execute(consumer);
-    } catch (Exception e) {
-      e.printStackTrace();
+    /**
+     * Puts this message at the end of the queue
+     *
+     * @param message message to be processed in the future
+     */
+    protected final void enqueue(T message) {
+        try {
+            queue.put(message);
+            executor.execute(consumer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-  }
 
-  public boolean isQueueEmpty() {
-    return queue.isEmpty();
-  }
-
-  /**
-   * Initiates an orderly shutdown in which previously submitted
-   * tasks are executed, but no new tasks will be accepted.
-   */
-  public void shutdown() {
-    if (executor instanceof ExecutorService) {
-      ((ExecutorService) executor).shutdown();
+    public boolean isQueueEmpty() {
+        return queue.isEmpty();
     }
-  }
+
+    /**
+     * Initiates an orderly shutdown in which previously submitted
+     * tasks are executed, but no new tasks will be accepted.
+     */
+    public void shutdown() {
+        if (executor instanceof ExecutorService) {
+            ((ExecutorService) executor).shutdown();
+        }
+    }
 
 }

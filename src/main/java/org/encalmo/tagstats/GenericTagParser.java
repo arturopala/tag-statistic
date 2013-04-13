@@ -28,7 +28,6 @@ public class GenericTagParser implements TagParser {
         if (reader == null) {
             throw new AssertionError("reader must not be null");
         }
-
         int counter = 0;
         long t0 = System.nanoTime();
         CharBuffer buffer = CharBuffer.allocate(256);
@@ -39,37 +38,33 @@ public class GenericTagParser implements TagParser {
                 counter++;
             }
             processCharacter(' ', buffer, tagStats);
-
             long t1 = System.nanoTime();
-            System.out.println(counter + " characters long text parsed in " + (int) ((t1 - t0) / 1000000d) +
-                    "ms using thread " +
-                    Thread.currentThread().getName());
+            System.out.println("[" + Thread.currentThread().getName() + "] " + counter + " characters long text parsed in " + (int) ((t1 - t0) / 1000000d) + "ms");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                }
+            try {
+                reader.close();
+            } catch (IOException e) {
             }
         }
     }
 
-    protected void processCharacter(char ch, CharBuffer buffer, TagStats<String> statistic) {
+    protected void processCharacter(char ch, CharBuffer buffer, TagStats<String> stats) {
         ch = Character.toLowerCase(ch);
         if (parseStrategy.isTagDelimiter(ch)) {
-            registerTagOccurrence(buffer, statistic);
+            registerTagOccurrence(buffer, stats);
         } else if (parseStrategy.isValidTagCharacter(ch)) {
             rememberCharacter(ch, buffer);
         }
     }
 
-    protected void registerTagOccurrence(CharBuffer buffer, TagStats<String> statistic) {
+    protected void registerTagOccurrence(CharBuffer buffer, TagStats<String> stats) {
         if (buffer.remaining() > 0) {
             String tag = pollTag(buffer);
-            if (parseStrategy.isValidTag(tag)) {
-                statistic.increment(tag);
+            String refinedTag = parseStrategy.refineTag(tag);
+            if (refinedTag != null && parseStrategy.isValidTag(refinedTag)) {
+                stats.increment(refinedTag);
             }
         } else {
             buffer.clear();

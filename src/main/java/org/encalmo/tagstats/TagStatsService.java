@@ -12,7 +12,7 @@ import java.nio.file.Path;
  * The user can query the real time version of the list thorough a socket connection (if enabled).
  * The service scans given directory for existing and new text files  (if enabled).
  * <p/>
- * Generic features:
+ * Default features:
  * <ul>
  * <li> The service processes multiple files at the same time.
  * <li> Tags are composed by a mix of letters and numbers and dash “-“. (Eg: 12313, abc123, 66-route, 66route,).
@@ -45,7 +45,6 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
         if (config.getThreads() < 1)
             throw new AssertionError("config parameter 'threads' should equal or greater than 1");
 
-        final Path path = FileSystems.getDefault().getPath(config.getDirectory());
         final Charset charset = Charset.defaultCharset();
         final TagStatsSet<String> tags = new TagStatsSet<>();
 
@@ -63,6 +62,7 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
         }
 
         if (config.getDirectory() != null) {
+            final Path path = FileSystems.getDefault().getPath(config.getDirectory());
             this.watch = new DirectoryScanAndWatch(path, new TagStatsDirectoryListener(fileParserActor, tags));
         } else {
             this.watch = null;
@@ -111,5 +111,9 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
     @Override
     public void parse(Reader reader) {
         tagParserActor.parse(reader);
+    }
+
+    public boolean isParsingQueueEmpty() {
+        return tagParserActor.isQueueEmpty() && fileParserActor.isQueueEmpty();
     }
 }

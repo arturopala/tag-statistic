@@ -99,31 +99,4 @@ public class MultiplexedSocketServer extends SingleThreadService {
         client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
 
-  /*private void read(SelectionKey key) throws IOException {
-      SocketChannel channel = (SocketChannel) key.channel();
-      ByteBuffer buffer = ByteBuffer.allocate(8192);
-      int numRead = -1;
-      try {
-          numRead = channel.read(buffer);
-      }
-      catch (IOException e) {
-          e.printStackTrace();
-      }
-      if (numRead == -1) {
-          channel.close();
-          key.cancel();
-          return;
-      } else {
-          byte[] data = new byte[numRead];
-          System.arraycopy(buffer.array(), 0, data, 0, numRead);
-          key.interestOps(SelectionKey.OP_WRITE);
-      }
-  }*/
-
-  /*private void write(SelectionKey key) throws IOException {
-      SocketChannel channel = (SocketChannel) key.channel();
-      byte[] item = new byte[10];
-      channel.write(ByteBuffer.wrap(item));
-      key.interestOps(SelectionKey.OP_READ);
-  }*/
 }

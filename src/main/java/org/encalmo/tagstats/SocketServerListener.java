@@ -17,7 +17,6 @@ public interface SocketServerListener {
     /**
      * Write to the socket channel represented by the SelectionKey
      *
-     * @param key
      * @throws Exception
      */
     void write(SelectionKey key) throws Exception;

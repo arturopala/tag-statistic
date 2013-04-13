@@ -19,6 +19,11 @@ public class GenericTagParseStrategy implements TagParseStrategy {
     }
 
     @Override
+    public boolean isValidTagCharacter(char ch) {
+        return Character.isAlphabetic(ch) || Character.isDigit(ch);
+    }
+
+    @Override
     public boolean isTagDelimiter(char ch) {
         return Character.isWhitespace(ch) || (ch == ',');
     }
@@ -29,7 +34,7 @@ public class GenericTagParseStrategy implements TagParseStrategy {
     }
 
     @Override
-    public boolean isValidTagCharacter(char ch) {
-        return Character.isAlphabetic(ch) || Character.isDigit(ch);
+    public String refineTag(String tag) {
+        return tag;
     }
 }

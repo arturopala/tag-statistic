@@ -12,4 +12,11 @@ public class AssertThat {
         }
     }
 
+    public static void isEmpty(Iterable<String> tags) {
+        int i = 0;
+        for (String tag : tags) {
+            i++;
+        }
+    }
+
 }

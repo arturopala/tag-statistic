@@ -38,7 +38,7 @@ Abstract classes:
 - Actor is a base abstract class of all asynchronous components, 
   encapsulates message queue and multi-threaded execution details
 - SingleThreadService is a base abstract class of manageable services running in the single dedicated thread, 
-  encapsulates stop/start execution details
+  encapsulates asynchronous stop/start execution details
 
 Components:
 - TagStatsApp acts as a TagStatsService launcher.
