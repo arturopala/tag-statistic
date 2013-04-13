@@ -11,8 +11,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 
-
-public class TagStatsAppTest {
+public class TagStatsServiceTest {
     @Test
     public void shouldParseFilesFromDirectoryAndReturnTop10Tags() throws Exception {
         //given
@@ -21,17 +20,21 @@ public class TagStatsAppTest {
                 "aliquam", "tortor", "dolor"
         };
         String expectedResponse = prepareExpectedResponse(expectedTopTags);
-        TagStatsApp app = new TagStatsApp(33568, "src/test/resources", 3);
-        AssertThat.sameElements(app.top());
+        TagStatsServiceConfig config = new TagStatsServiceConfig();
+        config.setPort(33568);
+        config.setDirectory("src/test/resources");
+        config.setThreads(3);
+        TagStatsService service = new TagStatsService(config);
+        AssertThat.sameElements(service.top());
         //when
-        app.start();
+        service.start();
         Thread.sleep(1000);
         //then
-        AssertThat.sameElements(app.top(), expectedTopTags);
-        InetSocketAddress address = app.getAddress();
+        AssertThat.sameElements(service.top(), expectedTopTags);
+        InetSocketAddress address = service.getAddress();
         String response = readTop10TagsFromSocket(address);
         Assert.assertEquals(expectedResponse, response);
-        app.stop();
+        service.stop();
     }
 
     private String prepareExpectedResponse(String[] expectedTopTags) {

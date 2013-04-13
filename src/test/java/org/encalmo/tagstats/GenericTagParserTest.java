@@ -12,7 +12,8 @@ public class GenericTagParserTest {
         //given
         Reader r = new StringReader(TestData.TEST_STRING_1);
         TagStats<String> s = new TagStatsSet<>();
-        TagParser p = new GenericTagParser(s);
+        TagParseStrategy ps = new GenericTagParseStrategy(5);
+        TagParser p = new GenericTagParser(s, ps);
         //when
         p.parse(r);
         Iterable<String> tags = s.top();

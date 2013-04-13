@@ -14,7 +14,8 @@ public class TagParserActorTest {
         //given
         Reader r = new StringReader(TestData.TEST_STRING_1);
         TagStats<String> s = new TagStatsSet<>();
-        TagParser p = new TagParserActor(new GenericTagParser(s), EXECUTOR, 1);
+        TagParseStrategy ps = new GenericTagParseStrategy(5);
+        TagParser p = new TagParserActor(new GenericTagParser(s, ps), EXECUTOR, 1);
         //when
         p.parse(r);
         Iterable<String> tags = s.top();

@@ -14,7 +14,8 @@ public class FileParserActorTest {
         //given
         Path path1 = Paths.get("src/test/resources/text1.txt");
         TagStats<String> s = new TagStatsSet<>();
-        TagParser p = new TagParserActor(new GenericTagParser(s), EXECUTOR, 1);
+        TagParseStrategy ps = new GenericTagParseStrategy(5);
+        TagParser p = new TagParserActor(new GenericTagParser(s, ps), EXECUTOR, 1);
         FileParser f = new FileParserActor(p, EXECUTOR, 1);
         //when
         f.parse(path1);
