@@ -62,7 +62,7 @@ public final class TagStatsSet<T> implements TagStats<T> {
             append(last, elem);
         } else {
             elem.count++;
-            adjust(elem);
+            while (adjust(elem)) ;
         }
         total++;
         steps--;
@@ -75,6 +75,11 @@ public final class TagStatsSet<T> implements TagStats<T> {
     @Override
     public Iterable<T> top() {
         return top.get();
+    }
+
+    @Override
+    public int total() {
+        return total;
     }
 
     public double shareOf(T tag) {
@@ -100,13 +105,11 @@ public final class TagStatsSet<T> implements TagStats<T> {
         check(back);
     }
 
-    private void adjust(Element<T> elem) {
-        if (elem.previous != null) {
-            if (elem.previous.count < elem.count) {
-                swap(elem);
-                adjust(elem);
-            }
-        }
+    private boolean adjust(Element<T> elem) {
+        if (elem.previous == null) return false;
+        if (elem.previous.count >= elem.count) return false;
+        swap(elem);
+        return true;
     }
 
     private void swap(Element<T> elem) {

@@ -41,4 +41,9 @@ public class TagStatsActor<T> extends Actor<T> implements TagStats<T> {
     public Iterable<T> top() {
         return tags.top();
     }
+
+    @Override
+    public int total() {
+        return tags.total();
+    }
 }

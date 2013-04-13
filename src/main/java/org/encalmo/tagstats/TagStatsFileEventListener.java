@@ -10,11 +10,11 @@ import java.nio.file.Path;
  */
 public class TagStatsFileEventListener extends SimpleFileEventListener {
     private final FileParserActor fileParserActor;
-    private final TagStats<String> tags;
+    private final TagStatsActor<String> tagStatsActor;
 
-    public TagStatsFileEventListener(FileParserActor fileParserActor, TagStats<String> tags) {
+    public TagStatsFileEventListener(FileParserActor fileParserActor, TagStatsActor<String> tagStatsActor) {
         this.fileParserActor = fileParserActor;
-        this.tags = tags;
+        this.tagStatsActor = tagStatsActor;
     }
 
     @Override
@@ -24,14 +24,18 @@ public class TagStatsFileEventListener extends SimpleFileEventListener {
 
     @Override
     public boolean initialFilesAlreadyProcessed() {
-        while (!fileParserActor.isQueueEmpty()) {
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+        }
+        while (!tagStatsActor.isQueueEmpty()) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
         }
-        System.out.println("\r\nTop 10 tags:\r\n-------------------");
-        for (String tag : tags.top()) {
+        System.out.println("\r\nTop tags (from all " + tagStatsActor.total() + "):\r\n-------------------");
+        for (String tag : tagStatsActor.top()) {
             System.out.println(tag);
         }
         return true;

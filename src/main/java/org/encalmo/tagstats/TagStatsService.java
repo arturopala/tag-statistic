@@ -67,7 +67,7 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
 
         if (config.getBaseDirectory() != null) {
             final Path path = FileSystems.getDefault().getPath(config.getBaseDirectory());
-            this.watch = new DirectoryScanAndWatch(path, new TagStatsFileEventListener(fileParserActor, tags));
+            this.watch = new DirectoryScanAndWatch(path, new TagStatsFileEventListener(fileParserActor, tagStatsActor));
         } else {
             this.watch = null;
         }
@@ -105,6 +105,11 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
     @Override
     public Iterable<String> top() {
         return tagStatsActor.top();
+    }
+
+    @Override
+    public int total() {
+        return tagStatsActor.total();
     }
 
     @Override

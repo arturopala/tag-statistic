@@ -14,4 +14,5 @@ public interface TagStats<T> {
 
     Iterable<T> top();
 
+    int total();
 }
