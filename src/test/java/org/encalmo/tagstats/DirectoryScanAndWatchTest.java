@@ -13,7 +13,7 @@ public class DirectoryScanAndWatchTest {
 
     @Test
     public void shouldWatchDirectory() throws Exception {
-
+        //given
         final AtomicInteger files = new AtomicInteger(0);
         final AtomicInteger events = new AtomicInteger(0);
 
@@ -33,6 +33,7 @@ public class DirectoryScanAndWatchTest {
             }
 
         });
+        //when
         Files.createFile(path.resolve("file0.txt"));
         Files.delete(path.resolve("file0.txt"));
         directoryScanAndWatch.start();
@@ -47,6 +48,7 @@ public class DirectoryScanAndWatchTest {
         directoryScanAndWatch.stop();
         Files.createFile(path.resolve("file11.txt"));
         Files.delete(path.resolve("file11.txt"));
+        //then
         assertEquals(2, files.get());
         assertEquals(22, events.get());
     }

@@ -3,6 +3,8 @@ package org.encalmo.tagstats;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
@@ -12,38 +14,48 @@ import java.nio.charset.CharsetDecoder;
 
 public class TagStatsAppTest {
     @Test
-    public void shouldParseFilesFromDirectoryAndReturnTopTags() throws Exception {
+    public void shouldParseFilesFromDirectoryAndReturnTop10Tags() throws Exception {
+        //given
         String[] expectedTopTags = new String[]{
                 "ipsum", "vitae", "nulla", "pellentesque", "vestibulum", "mauris", "sapien",
                 "aliquam", "tortor", "dolor"
         };
+        String expectedResponse = prepareExpectedResponse(expectedTopTags);
+        TagStatsApp app = new TagStatsApp(33568, "src/test/resources", 3);
+        AssertThat.sameElements(app.top());
+        //when
+        app.start();
+        Thread.sleep(1000);
+        //then
+        AssertThat.sameElements(app.top(), expectedTopTags);
+        InetSocketAddress address = app.getAddress();
+        String response = readTop10TagsFromSocket(address);
+        Assert.assertEquals(expectedResponse, response);
+        app.stop();
+    }
+
+    private String prepareExpectedResponse(String[] expectedTopTags) {
         StringBuffer er = new StringBuffer();
         for (String tag : expectedTopTags) {
             er.append(tag);
             er.append("\n");
         }
 
-        String expectedResponse = er.toString();
-        TagStatsApp app = new TagStatsApp(33568, "src/test/resources", 3);
-        AssertThat.sameElements(app.top());
-        app.start();
-        Thread.sleep(1000);
-        AssertThat.sameElements(app.top(), expectedTopTags);
+        return er.toString();
+    }
 
+    private String readTop10TagsFromSocket(InetSocketAddress address) throws IOException {
         SocketChannel channel = SocketChannel.open();
-        if (!channel.connect(app.getAddress())) {
+        if (!channel.connect(address)) {
             channel.finishConnect();
         }
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         channel.read(buffer);
+        channel.close();
         buffer.flip();
-
         CharsetDecoder decoder = Charset.defaultCharset().newDecoder();
         CharBuffer charBuffer = decoder.decode(buffer);
-        String response = charBuffer.toString();
-        Assert.assertEquals(expectedResponse, response);
-        app.stop();
-        channel.close();
+        return charBuffer.toString();
     }
 
 }

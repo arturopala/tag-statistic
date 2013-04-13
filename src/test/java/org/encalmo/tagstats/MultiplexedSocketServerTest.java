@@ -17,6 +17,7 @@ public class MultiplexedSocketServerTest {
 
     @Test
     public void shouldOpenSocketAndListen() throws Exception {
+        //given
         InetSocketAddress address = new InetSocketAddress(37243);
         final Charset charset = Charset.defaultCharset();
         final String message = "Hello, World!";
@@ -52,9 +53,11 @@ public class MultiplexedSocketServerTest {
                 key.cancel();
             }
         });
+        //when
         server.start();
         client.start();
         Thread.sleep(1000);
+        //then
         Assert.assertEquals(message, result.get());
     }
 

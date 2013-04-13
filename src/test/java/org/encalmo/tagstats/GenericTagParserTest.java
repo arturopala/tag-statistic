@@ -8,13 +8,16 @@ import java.io.StringReader;
 public class GenericTagParserTest {
 
     @Test
-    public void shouldParseString() {
-        Reader r = new StringReader("kawa mleko\tkaw.a,m./.leko ka+wa\t\t\tm+L+e+k.o sok\t\r\r\"\" M?lekO K1\tawa k1a\rwa k\n1awa k,a,wa\r\n\nk1awa m'leko9 ka_wa, m\"leko.9 heRbatA,H.Erba/ta");
+    public void shouldParseStringAndReturnTop10Tags() {
+        //given
+        Reader r = new StringReader(TestData.TEST_STRING_1);
         TagStats<String> s = new TagStatsSet<>();
         TagParser p = new GenericTagParser(s);
+        //when
         p.parse(r);
         Iterable<String> tags = s.top();
-        AssertThat.sameElements(tags, "mleko", "mleko9", "herbata", "k1awa");
+        //then
+        AssertThat.sameElements(tags, TestData.EXPECTED_TOP10_TAGS_1);
     }
 
 }
