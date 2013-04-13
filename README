@@ -1,14 +1,16 @@
-"Top Ten Tags" application reads and parses in parallel multiple text files and maintains the Top 10 frequently occurring words (tags), user can query the real time version of the Top10 list thorough a multiplexed socket connection or an API.
+"Top Ten Tags" application reads and parses in parallel multiple text files and maintains the Top N frequently occurring words (tags), user can query the real time version of the TopN list thorough a multiplexed socket connection or an API.
 
 1. Usage (requires at least Java 7 JRE or SDK)
 
-java -cp {tagstats.jar} org.encalmo.tagstats.TagStatsApp -p {port} -d {base directory} [-t {threads}]
+java -cp {tagstats.jar} org.encalmo.tagstats.TagStatsApp -p {serverSocketPort} -d {base baseDirectory} [-t {numberOfThreads} -s {topListSize} -a {topListUpdateAccuracy (1,100)}]
 
 2. Options:
 
--p Telnet port number on which the application would serve real time tag query requests.
+-p Telnet serverSocketPort number on which the application would serve real time tag query requests.
 -d Relative or absolute path to base directory to scan for text files.
--t (optional) Number of parallel threads dedicated to parsing files
+-t (optional) Number of parallel threads dedicated to parsing files.
+-s (optional) Size of maintained top list, default 10.
+-a (optional) Top list updates accuracy, default 1.
 
 3. Features:
 
@@ -20,7 +22,7 @@ Symbols, Space or punctuation marks are counted as tags.
 New lines, carriage returns, tabs and any white space are excluded.
 When the application completes processing it writes to standard output the top 10 tag list (neatly formatted) 
 sorted in descending order based on number of occurrences.
-The application accepts multiple connections on port specified (as a command line parameter, -p). 
+The application accepts multiple connections on serverSocketPort specified (as a command line parameter, -p).
 When the connection is made, the application prints the top 10 tag list (line by line) sorted in descending 
 order based on the number of occurrences and closes the connection immediately.
 
@@ -43,14 +45,14 @@ Abstract classes:
 Components:
 - TagStatsApp acts as a TagStatsService launcher.
 - TagStatsService is a starting point and components configurator.
-- TagStatsSet maintains in-memory doubly-linked ordered list of tags and current top10 stats.
+- TagStatsSet maintains in-memory doubly-linked ordered list of tags and current TopN stats.
 - TagStatsActor encapsulates TagStatsSet and process all inserts using long queue and single thread to avoid synchronization of concurrent inserts inside TagStatsSet.
 - GenericTagParserStrategy encapsulates default parsing rules
 - GenericTagParser parses stream of characters into tags and updates TagStatsSet on the go.
-- TagParserActor encapsulates GenericTagParser and processes streams using multiple-threads and short queue to avoid keeping them open too long.
+- TagParserActor encapsulates GenericTagParser and processes streams using multiple threads and short queue to avoid keeping them open too long.
 - FileParserActor encapsulates TagParserActor and acts as a proxy responsible of queueing and opening files before they reach the TagParserActor.
-- DirectoryWatchAndScan observes base directory and notifies FileParserActor about new files to parse, uses TagStatsFileEventListener.
-- MultiplexedServerSocket serves at dedicated network socket Top10 tags provided by TagStatsSet, uses TagStatsServerSocketEventListener.
+- DirectoryWatchAndScan observes baseDirectory and notifies FileParserActor about new files to parse, uses TagStatsFileEventListener.
+- MultiplexedServerSocket serves at dedicated network socket TopN tags provided by TagStatsSet, uses TagStatsServerSocketEventListener.
 
 5. Repository and build
 

@@ -16,8 +16,8 @@ public class TagStatsServiceTest {
     public void shouldParseFilesFromDirectoryAndReturnTop10Tags() throws Exception {
         //given
         TagStatsServiceConfig config = new TagStatsServiceConfig();
-        config.setPort(33568);
-        config.setDirectory("src/test/resources");
+        config.setServerSocketPort(33568);
+        config.setBaseDirectory("src/test/resources");
         TagStatsService service = new TagStatsService(config);
         AssertThat.isEmpty(service.top());
         //when
@@ -35,7 +35,7 @@ public class TagStatsServiceTest {
     public void shouldParseFilesAndServeTop10RequestsInMultipleThreads() throws Exception {
         //given
         TagStatsServiceConfig config = new TagStatsServiceConfig();
-        config.setPort(33568);
+        config.setServerSocketPort(33568);
         final TagStatsService service = new TagStatsService(config);
         final InetSocketAddress address = service.getAddress();
         AssertThat.isEmpty(service.top());

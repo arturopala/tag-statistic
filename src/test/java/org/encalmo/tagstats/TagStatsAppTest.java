@@ -10,19 +10,22 @@ public class TagStatsAppTest {
     @Test
     public void testParseArguments() throws Exception {
         //when
-        TagStatsServiceConfig config = TagStatsApp.parseArguments("-p 8080 -d src/test/resources -t 6".split(" "));
+        TagStatsServiceConfig config = TagStatsApp.parseArguments("-p 8080 -d src/test/resources -t 6 -s 25 -a 5".split(" "));
         //then
-        Assert.assertEquals(8080, config.getPort());
-        Assert.assertEquals("src/test/resources", config.getDirectory());
-        Assert.assertEquals(6, config.getThreads());
+        Assert.assertEquals(8080, config.getServerSocketPort());
+        Assert.assertEquals("src/test/resources", config.getBaseDirectory());
+        Assert.assertEquals(6, config.getNumberOfThreads());
+        Assert.assertEquals(25, config.getTopListSize());
+        Assert.assertEquals(5, config.getTopListUpdateAccuracy());
     }
 
     @Test
     public void testStart() throws Exception {
         //given
         TagStatsServiceConfig config = new TagStatsServiceConfig();
-        config.setPort(33568);
-        config.setDirectory("src/test/resources");
+        config.setServerSocketPort(33568);
+        config.setBaseDirectory("src/test/resources");
+        config.setTopListUpdateAccuracy(10);
         TagStatsService service = TagStatsApp.start(config);
         AssertThat.isEmpty(service.top());
         //when

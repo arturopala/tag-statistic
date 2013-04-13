@@ -13,7 +13,7 @@ public class FileParserActorTest {
     public void shouldParseText1AndReturnTop10Tags() throws Exception {
         //given
         Path path1 = Paths.get("src/test/resources/text1.txt");
-        TagStats<String> s = new TagStatsSet<>();
+        TagStats<String> s = new TagStatsSet<>(10, 1);
         TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), EXECUTOR, 1);
         FileParser f = new FileParserActor(p, EXECUTOR, 1);

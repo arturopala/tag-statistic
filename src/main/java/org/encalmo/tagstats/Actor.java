@@ -56,7 +56,7 @@ public abstract class Actor<T> {
         }
     }
 
-    public boolean isQueueEmpty() {
+    public final boolean isQueueEmpty() {
         return queue.isEmpty();
     }
 

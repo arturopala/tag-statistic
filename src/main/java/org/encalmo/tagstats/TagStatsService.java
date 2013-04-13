@@ -7,7 +7,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
 /**
- * “Tag Stats” service reading and parsing in parallel multiple text files and finding the Top 10 frequently occurring words (tags).
+ * “Tag Stats” service reading and parsing in parallel multiple text files and finding the TopN frequently occurring words (tags).
  * The service maintain a real time in-memory version of the Top 10 Tag list.
  * The user can query the real time version of the list thorough a socket connection (if enabled).
  * The service scans given directory for existing and new text files  (if enabled).
@@ -42,27 +42,31 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
 
         if (config.getTagParserStrategy() == null)
             throw new AssertionError("config parameter 'parserStrategy' should not be null");
-        if (config.getThreads() < 1)
-            throw new AssertionError("config parameter 'threads' should equal or greater than 1");
+        if (config.getNumberOfThreads() < 1 || config.getNumberOfThreads() > 50)
+            throw new AssertionError("config parameter 'threads' should be equal or greater than 1 and less than 50");
+        if (config.getTopListSize() < 1 || config.getTopListSize() > 100)
+            throw new AssertionError("config parameter 'topListSize' should be equal or greater than 1 and less than 100");
+        if (config.getTopListUpdateAccuracy() < 1 || config.getTopListUpdateAccuracy() > 100)
+            throw new AssertionError("config parameter 'accuracy' should be equal or greater than 1 and less than 100");
 
         final Charset charset = Charset.defaultCharset();
-        final TagStatsSet<String> tags = new TagStatsSet<>();
+        final TagStatsSet<String> tags = new TagStatsSet<>(config.getTopListSize(), config.getTopListUpdateAccuracy());
 
         this.tagStatsActor = new TagStatsActor<>(tags);
         final TagParser parser = new GenericTagParser(tagStatsActor, config.getTagParserStrategy());
-        this.tagParserActor = new TagParserActor(parser, config.getThreads());
+        this.tagParserActor = new TagParserActor(parser, config.getNumberOfThreads());
         this.fileParserActor = new FileParserActor(tagParserActor);
 
-        if (config.getPort() >= 0) {
-            this.address = new InetSocketAddress(config.getPort());
+        if (config.getServerSocketPort() >= 0) {
+            this.address = new InetSocketAddress(config.getServerSocketPort());
             this.server = new MultiplexedServerSocket(address, new TagStatsServerSocketEventListener(tags, charset));
         } else {
             this.address = null;
             this.server = null;
         }
 
-        if (config.getDirectory() != null) {
-            final Path path = FileSystems.getDefault().getPath(config.getDirectory());
+        if (config.getBaseDirectory() != null) {
+            final Path path = FileSystems.getDefault().getPath(config.getBaseDirectory());
             this.watch = new DirectoryScanAndWatch(path, new TagStatsFileEventListener(fileParserActor, tags));
         } else {
             this.watch = null;

@@ -9,7 +9,7 @@ public class TagStatsActorTest {
     @Test
     public void shouldAppendTagAndIncrementRank() {
         //given
-        TagStats<String> tags = new TagStatsActor<>(new TagStatsSet<String>(), EXECUTOR);
+        TagStats<String> tags = new TagStatsActor<>(new TagStatsSet<String>(10, 1), EXECUTOR);
         AssertThat.sameElements(tags.top());
         //when
         tags.increment("bas");
@@ -20,7 +20,7 @@ public class TagStatsActorTest {
     @Test
     public void shouldAppendTagsAndReturnTopTags() {
         //given
-        TagStats<String> tags = new TagStatsActor<>(new TagStatsSet<String>(), EXECUTOR);
+        TagStats<String> tags = new TagStatsActor<>(new TagStatsSet<String>(10, 1), EXECUTOR);
         AssertThat.sameElements(tags.top());
         //when
         tags.increment("bas");

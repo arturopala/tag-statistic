@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
 /**
- * Writes out Top10 tags to the socket channel and closes.
+ * Writes out TopN tags to the socket channel and closes.
  *
  * @see MultiplexedServerSocket
  * @see TagStatsService

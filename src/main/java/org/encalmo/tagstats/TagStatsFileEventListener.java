@@ -3,7 +3,7 @@ package org.encalmo.tagstats;
 import java.nio.file.Path;
 
 /**
- * Prints out Top10 tags after all initial text files were processed.
+ * Prints out TopN tags after all initial text files were processed.
  *
  * @see DirectoryScanAndWatch
  * @see TagStatsService

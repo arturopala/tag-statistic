@@ -8,7 +8,7 @@ public class TagStatsSetTest {
     @Test
     public void shouldAppendTagAndIncrementRank() {
         //given
-        TagStatsSet<String> tags = new TagStatsSet<>();
+        TagStatsSet<String> tags = new TagStatsSet<>(10, 1);
         //when
         tags.increment("bas");
         //then
@@ -18,7 +18,7 @@ public class TagStatsSetTest {
     @Test
     public void shouldAppendTagsAndReturnTopTags() {
         //given
-        TagStatsSet<String> tags = new TagStatsSet<>();
+        TagStatsSet<String> tags = new TagStatsSet<>(10, 1);
         //when
         tags.increment("bas");
         tags.increment("foo");
@@ -33,7 +33,7 @@ public class TagStatsSetTest {
     @Test
     public void shouldCalculateTagShare() {
         //given
-        TagStatsSet<String> tags = new TagStatsSet<>();
+        TagStatsSet<String> tags = new TagStatsSet<>(10, 1);
         //when
         tags.increment("bas");
         tags.increment("bas");

@@ -13,7 +13,7 @@ public class TagParserActorTest {
     public void shouldParseStringAndReturnTop10Tags() throws Exception {
         //given
         Reader r = new StringReader(TestData.TEST_STRING_1);
-        TagStats<String> s = new TagStatsSet<>();
+        TagStats<String> s = new TagStatsSet<>(10, 1);
         TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), EXECUTOR, 1);
         //when

@@ -7,11 +7,28 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 /**
- * TagStatsSet maintains in-memory doubly-linked ordered list of tags and current top10 stats
+ * TagStatsSet maintains in-memory doubly-linked ordered list of tags and current TopN list.
+ * Instances of this class are NOT thread-safe.
  *
  * @param <T> type of tags
+ * @see TagStatsActor
+ * @see TagStatsService
  */
-class TagStatsSet<T> implements TagStats<T> {
+public final class TagStatsSet<T> implements TagStats<T> {
+
+    private final int topListSize;
+    private final int topListUpdateAccuracy;
+
+    /**
+     * @param topListSize           the size of the maintained top list
+     * @param topListUpdateAccuracy at how many increment steps should we update the top list
+     */
+    TagStatsSet(int topListSize, int topListUpdateAccuracy) {
+        this.topListSize = topListSize;
+        this.topListUpdateAccuracy = topListUpdateAccuracy;
+        this.steps = topListUpdateAccuracy;
+    }
+
     private class Element<T> {
         final T tag;
         int count = 1;
@@ -27,8 +44,10 @@ class TagStatsSet<T> implements TagStats<T> {
     private Map<T, Element<T>> tags = new HashMap<>();
     private Element<T> first;
     private Element<T> last;
-    private AtomicReference<ArrayList<T>> top = new AtomicReference<>(new ArrayList<T>());
     private int total;
+    private int steps;
+
+    private AtomicReference<ArrayList<T>> top = new AtomicReference<>(new ArrayList<T>());
 
     @Override
     public void increment(T tag) {
@@ -46,7 +65,11 @@ class TagStatsSet<T> implements TagStats<T> {
             adjust(elem);
         }
         total++;
-        export();
+        steps--;
+        if (steps == 0) {
+            updateTopList();
+            steps = topListUpdateAccuracy;
+        }
     }
 
     @Override
@@ -63,7 +86,7 @@ class TagStatsSet<T> implements TagStats<T> {
         }
     }
 
-    protected void append(Element<T> front, Element<T> back) {
+    private void append(Element<T> front, Element<T> back) {
         Element<T> moved = null;
         if (front != null) {
             moved = front.next;
@@ -77,7 +100,7 @@ class TagStatsSet<T> implements TagStats<T> {
         check(back);
     }
 
-    protected void adjust(Element<T> elem) {
+    private void adjust(Element<T> elem) {
         if (elem.previous != null) {
             if (elem.previous.count < elem.count) {
                 swap(elem);
@@ -86,7 +109,7 @@ class TagStatsSet<T> implements TagStats<T> {
         }
     }
 
-    protected void swap(Element<T> elem) {
+    private void swap(Element<T> elem) {
         Element<T> front = elem.previous;
         if (front != null) {
             // 2nd element front change
@@ -110,7 +133,7 @@ class TagStatsSet<T> implements TagStats<T> {
         check(elem);
     }
 
-    protected void check(Element<T> elem) {
+    private void check(Element<T> elem) {
         if (elem.next == null) {
             last = elem;
         }
@@ -119,10 +142,10 @@ class TagStatsSet<T> implements TagStats<T> {
         }
     }
 
-    protected void export() {
-        ArrayList<T> list = new ArrayList<>();
+    private void updateTopList() {
+        ArrayList<T> list = new ArrayList<>(topListSize);
         Element<T> elem = first;
-        while ((elem != null) && (list.size() < 10)) {
+        while ((elem != null) && (list.size() < topListSize)) {
             list.add(elem.tag);
             elem = elem.next;
         }
