@@ -5,26 +5,16 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TagStatsServiceTest {
 
-    private static final String[] EXPECTED_TOP_TAGS = new String[]{
-            "ipsum", "vitae", "nulla", "pellentesque", "vestibulum", "mauris", "sapien",
-            "aliquam", "tortor", "dolor"
-    };
-
     @Test
     public void shouldParseFilesFromDirectoryAndReturnTop10Tags() throws Exception {
         //given
-        String expectedResponse = prepareExpectedResponse(EXPECTED_TOP_TAGS);
         TagStatsServiceConfig config = new TagStatsServiceConfig();
         config.setPort(33568);
         config.setDirectory("src/test/resources");
@@ -34,17 +24,16 @@ public class TagStatsServiceTest {
         service.start();
         Thread.sleep(1000);
         //then
-        AssertThat.sameElements(service.top(), EXPECTED_TOP_TAGS);
+        AssertThat.sameElements(service.top(), TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
         InetSocketAddress address = service.getAddress();
-        String response = readTop10TagsFromSocket(address);
-        Assert.assertEquals(expectedResponse, response);
+        String[] response = TagStatsClient.readTop10TagsFromSocket(address, java.nio.charset.Charset.defaultCharset());
+        AssertThat.sameElements(response, TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
         service.stop();
     }
 
     @Test
     public void shouldParseFilesAndServeTop10RequestsInMultipleThreads() throws Exception {
         //given
-        String expectedResponse = prepareExpectedResponse(EXPECTED_TOP_TAGS);
         TagStatsServiceConfig config = new TagStatsServiceConfig();
         config.setPort(33568);
         final TagStatsService service = new TagStatsService(config);
@@ -71,7 +60,7 @@ public class TagStatsServiceTest {
                 @Override
                 public void run() {
                     try {
-                        readTop10TagsFromSocket(address);
+                        TagStatsClient.readTop10TagsFromSocket(address, Charset.defaultCharset());
                     } catch (IOException e) {
                         Assert.fail(e.getMessage());
                     }
@@ -82,36 +71,10 @@ public class TagStatsServiceTest {
             Thread.sleep(1000);
         }
         //then
-        AssertThat.sameElements(service.top(), EXPECTED_TOP_TAGS);
-        String response = readTop10TagsFromSocket(address);
-        Assert.assertEquals(expectedResponse, response);
+        AssertThat.sameElements(service.top(), TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
+        String[] response = TagStatsClient.readTop10TagsFromSocket(address, Charset.defaultCharset());
+        AssertThat.sameElements(response, TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
         service.stop();
-    }
-
-    private String prepareExpectedResponse(String[] expectedTopTags) {
-        StringBuffer er = new StringBuffer();
-        for (String tag : expectedTopTags) {
-            er.append(tag);
-            er.append("\n");
-        }
-
-        return er.toString();
-    }
-
-    private String readTop10TagsFromSocket(InetSocketAddress address) throws IOException {
-        SocketChannel channel = SocketChannel.open();
-        if (!channel.connect(address)) {
-            channel.finishConnect();
-        }
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        channel.read(buffer);
-        channel.close();
-        buffer.flip();
-        CharsetDecoder decoder = Charset.defaultCharset().newDecoder();
-        CharBuffer charBuffer = decoder.decode(buffer);
-        String response = charBuffer.toString();
-        System.out.println("[" + Thread.currentThread().getName() + "] response received " + response.length());
-        return response;
     }
 
 }

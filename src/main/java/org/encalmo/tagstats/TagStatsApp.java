@@ -8,9 +8,24 @@ import java.util.Properties;
  */
 public class TagStatsApp {
 
+    private static final String USAGE_MESSAGE = "Usage: java -cp {tagstats.jar} " + TagStatsApp.class.getName() + " -p {port} -d {base directory} [-t {threads}]";
+
+    private TagStatsApp() {
+    }
+
     public static void main(String[] args) throws Exception {
+        //parse arguments
+        TagStatsServiceConfig config = parseArguments(args);
+        //create and start service
+        start(config);
+        //wait forever
+        for (; ; ) {
+            Thread.sleep(60000);
+        }
+    }
+
+    protected static TagStatsServiceConfig parseArguments(String[] args) {
         if (args.length >= 4) {
-            //parse arguments
             Properties p = new Properties();
             p.setProperty(args[0], args[1]);
             p.setProperty(args[2], args[3]);
@@ -20,17 +35,15 @@ public class TagStatsApp {
             int port = Integer.parseInt(p.getProperty("-p"));
             String directory = p.getProperty("-d");
             int threads = Integer.parseInt(p.getProperty("-t", "0"));
-            //create and start service
-            TagStatsServiceConfig config = new TagStatsServiceConfig(port, directory, threads, new GenericTagParserStrategy(5));
-            TagStatsService service = new TagStatsService(config);
-            service.start();
-            //wait forever
-            for (; ; ) {
-                Thread.sleep(60000);
-            }
+            return new TagStatsServiceConfig(port, directory, threads, new GenericTagParserStrategy(5));
         } else {
-            throw new AssertionError("Usage: java -cp {tagstats.jar} " + TagStatsApp.class.getName() +
-                    " -p {port} -d {base directory} [-t {threads}]");
+            throw new AssertionError(USAGE_MESSAGE);
         }
+    }
+
+    protected static TagStatsService start(TagStatsServiceConfig config) throws Exception {
+        TagStatsService service = new TagStatsService(config);
+        service.start();
+        return service;
     }
 }

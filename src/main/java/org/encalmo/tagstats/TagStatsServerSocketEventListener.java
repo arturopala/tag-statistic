@@ -7,12 +7,17 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
-
-public class TagStatsServerListener implements SocketServerListener {
+/**
+ * Writes out Top10 tags to the socket channel and closes.
+ *
+ * @see MultiplexedServerSocket
+ * @see TagStatsService
+ */
+public class TagStatsServerSocketEventListener implements ServerSocketEventListener {
     private final TagStats<String> tags;
     private final Charset charset;
 
-    public TagStatsServerListener(TagStats<String> tags, Charset charset) {
+    public TagStatsServerSocketEventListener(TagStats<String> tags, Charset charset) {
         this.tags = tags;
         this.charset = charset;
     }
@@ -33,7 +38,9 @@ public class TagStatsServerListener implements SocketServerListener {
             stringBuffer.append("\n");
         }
         ByteBuffer buffer = encoder.encode(CharBuffer.wrap(stringBuffer));
-        channel.write(buffer);
+        if (channel.isOpen()) {
+            channel.write(buffer);
+        }
         key.cancel();
         channel.close();
     }

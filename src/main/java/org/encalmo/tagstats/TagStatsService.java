@@ -30,7 +30,7 @@ import java.nio.file.Path;
 
 public class TagStatsService implements TagStats<String>, TagParser, FileParser, ManageableService {
 
-    private final MultiplexedSocketServer server;
+    private final MultiplexedServerSocket server;
     private final DirectoryScanAndWatch watch;
     private final TagStatsActor<String> tagStatsActor;
     private final FileParserActor fileParserActor;
@@ -55,7 +55,7 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
 
         if (config.getPort() >= 0) {
             this.address = new InetSocketAddress(config.getPort());
-            this.server = new MultiplexedSocketServer(address, new TagStatsServerListener(tags, charset));
+            this.server = new MultiplexedServerSocket(address, new TagStatsServerSocketEventListener(tags, charset));
         } else {
             this.address = null;
             this.server = null;
@@ -63,7 +63,7 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
 
         if (config.getDirectory() != null) {
             final Path path = FileSystems.getDefault().getPath(config.getDirectory());
-            this.watch = new DirectoryScanAndWatch(path, new TagStatsDirectoryListener(fileParserActor, tags));
+            this.watch = new DirectoryScanAndWatch(path, new TagStatsFileEventListener(fileParserActor, tags));
         } else {
             this.watch = null;
         }

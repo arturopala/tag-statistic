@@ -6,7 +6,7 @@ import java.nio.CharBuffer;
 
 
 /**
- * GenericTagParser parses stream of characters into tags using {@link TagParserStrategy} and updates TagStatsSet on the go.
+ * GenericTagParser parses stream of characters into tags using {@link TagParserStrategy} and updates {@link TagStats} on the go.
  */
 public class GenericTagParser implements TagParser {
     private final TagStats<String> tagStats;

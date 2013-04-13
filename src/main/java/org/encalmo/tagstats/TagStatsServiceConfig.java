@@ -1,7 +1,7 @@
 package org.encalmo.tagstats;
 
 /**
- * Configuration parameters of the TagStatsService
+ * Configuration parameters of the {@link TagStatsService}
  */
 public class TagStatsServiceConfig {
 
@@ -20,18 +20,30 @@ public class TagStatsServiceConfig {
     public TagStatsServiceConfig() {
     }
 
+    /**
+     * Local server socket port number or -1 if server not enabled
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * Path to the directory to watch or null if not enabled
+     */
     public String getDirectory() {
         return directory;
     }
 
+    /**
+     * Number of threads for parallel parsing, default <code>Runtime.getRuntime().availableProcessors() * 2</code>
+     */
     public int getThreads() {
         return threads;
     }
 
+    /**
+     * Strategy of the tag parser, default {@link GenericTagParserStrategy}
+     */
     public TagParserStrategy getTagParserStrategy() {
         return tagParserStrategy;
     }

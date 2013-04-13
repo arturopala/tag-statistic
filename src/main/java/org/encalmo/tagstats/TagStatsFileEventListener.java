@@ -2,12 +2,17 @@ package org.encalmo.tagstats;
 
 import java.nio.file.Path;
 
-
-public class TagStatsDirectoryListener extends SimpleFileEventListener {
+/**
+ * Prints out Top10 tags after all initial text files were processed.
+ *
+ * @see DirectoryScanAndWatch
+ * @see TagStatsService
+ */
+public class TagStatsFileEventListener extends SimpleFileEventListener {
     private final FileParserActor fileParserActor;
     private final TagStats<String> tags;
 
-    public TagStatsDirectoryListener(FileParserActor fileParserActor, TagStats<String> tags) {
+    public TagStatsFileEventListener(FileParserActor fileParserActor, TagStats<String> tags) {
         this.fileParserActor = fileParserActor;
         this.tags = tags;
     }

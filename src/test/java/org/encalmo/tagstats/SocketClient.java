@@ -11,11 +11,11 @@ import java.util.Set;
 public class SocketClient extends SingleThreadService {
 
     private final InetSocketAddress address;
-    private final SocketClientListener listener;
+    private final ClientSocketEventListener listener;
     private Selector selector;
     private SocketChannel socketChannel;
 
-    public SocketClient(InetSocketAddress address, SocketClientListener listener) {
+    public SocketClient(InetSocketAddress address, ClientSocketEventListener listener) {
         this.address = address;
         this.listener = listener;
     }

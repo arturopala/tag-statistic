@@ -13,7 +13,9 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class MultiplexedSocketServerTest {
+public class MultiplexedServerSocketTest {
+
+    public static final CallingThreadExecutor EXECUTOR = new CallingThreadExecutor();
 
     @Test
     public void shouldOpenSocketAndListen() throws Exception {
@@ -22,7 +24,8 @@ public class MultiplexedSocketServerTest {
         final Charset charset = Charset.defaultCharset();
         final String message = "Hello, World!";
         final AtomicReference<String> result = new AtomicReference<>();
-        MultiplexedSocketServer server = new MultiplexedSocketServer(address, new SocketServerListener() {
+
+        MultiplexedServerSocket server = new MultiplexedServerSocket(address, new ServerSocketEventListener() {
             @Override
             public void read(SelectionKey key) throws Exception {
                 SocketChannel channel = (SocketChannel) key.channel();
@@ -41,7 +44,8 @@ public class MultiplexedSocketServerTest {
                 key.interestOps(SelectionKey.OP_READ);
             }
         });
-        SocketClient client = new SocketClient(address, new SocketClientListener() {
+
+        SocketClient client = new SocketClient(address, new ClientSocketEventListener() {
             @Override
             public void connected(SelectionKey key) throws Exception {
                 SocketChannel channel = (SocketChannel) key.channel();
@@ -53,6 +57,7 @@ public class MultiplexedSocketServerTest {
                 key.cancel();
             }
         });
+
         //when
         server.start();
         client.start();

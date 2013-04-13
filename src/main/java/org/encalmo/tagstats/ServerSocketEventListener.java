@@ -4,9 +4,9 @@ import java.nio.channels.SelectionKey;
 
 
 /**
- * SocketServerListener is an interface complementing {@link MultiplexedSocketServer}
+ * ServerSocketEventListener is an interface complementing {@link MultiplexedServerSocket}
  */
-public interface SocketServerListener {
+public interface ServerSocketEventListener {
     /**
      * Read from the socket channel represented by the SelectionKey
      *

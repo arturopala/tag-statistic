@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
  * SingleThreadService is a base abstract class of manageable services running in the single dedicated thread,
  * encapsulates stop/start execution details.
  *
- * @see MultiplexedSocketServer
+ * @see MultiplexedServerSocket
  * @see DirectoryScanAndWatch
  */
 public abstract class SingleThreadService implements ManageableService {

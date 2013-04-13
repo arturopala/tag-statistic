@@ -9,19 +9,20 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 /**
- * MultiplexedSocketServer is a general purpose component encapsulating
- * multiplexed ServerSocketChannel handling complexity behind simpler {@link SocketServerListener}.
+ * MultiplexedServerSocket is a general purpose component encapsulating
+ * multiplexed {@link ServerSocketChannel} complexity behind {@link ServerSocketEventListener}.
  * <p/>
  * This component is a {@link SingleThreadService} running in a separate thread.
  */
-public class MultiplexedSocketServer extends SingleThreadService {
+public class MultiplexedServerSocket extends SingleThreadService {
+
     private final InetSocketAddress address;
-    private final SocketServerListener listener;
+    private final ServerSocketEventListener listener;
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
     private SelectionKey selectionKey;
 
-    public MultiplexedSocketServer(InetSocketAddress address, SocketServerListener listener) {
+    public MultiplexedServerSocket(InetSocketAddress address, ServerSocketEventListener listener) {
         this.address = address;
         this.listener = listener;
     }
