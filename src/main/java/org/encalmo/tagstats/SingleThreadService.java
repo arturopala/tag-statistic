@@ -3,10 +3,12 @@ package org.encalmo.tagstats;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 /**
  * SingleThreadService is a base abstract class of manageable services running in the single dedicated thread,
  * encapsulates stop/start execution details.
+ *
+ * @see MultiplexedSocketServer
+ * @see DirectoryScanAndWatch
  */
 public abstract class SingleThreadService implements ManageableService {
     private ExecutorService executorService;

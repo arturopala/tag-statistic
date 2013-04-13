@@ -10,11 +10,11 @@ public class TagParserActorTest {
     public static final CallingThreadExecutor EXECUTOR = new CallingThreadExecutor();
 
     @Test
-    public void shouldParseStringAndReturnTop10Tags() {
+    public void shouldParseStringAndReturnTop10Tags() throws Exception {
         //given
         Reader r = new StringReader(TestData.TEST_STRING_1);
         TagStats<String> s = new TagStatsSet<>();
-        TagParseStrategy ps = new GenericTagParseStrategy(5);
+        TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), EXECUTOR, 1);
         //when
         p.parse(r);

@@ -21,7 +21,7 @@ public class TagStatsApp {
             String directory = p.getProperty("-d");
             int threads = Integer.parseInt(p.getProperty("-t", "0"));
             //create and start service
-            TagStatsServiceConfig config = new TagStatsServiceConfig(port, directory, threads, new GenericTagParseStrategy(5));
+            TagStatsServiceConfig config = new TagStatsServiceConfig(port, directory, threads, new GenericTagParserStrategy(5));
             TagStatsService service = new TagStatsService(config);
             service.start();
             //wait forever

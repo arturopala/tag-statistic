@@ -1,11 +1,12 @@
 package org.encalmo.tagstats;
 
 /**
- * TagParseStrategy is an interface of object implementing parsing strategy.
+ * TagParserStrategy is an interface of object implementing parsing strategy.
  *
- * @see GenericTagParseStrategy, GenericTagParser
+ * @see GenericTagParserStrategy
+ * @see GenericTagParser
  */
-public interface TagParseStrategy {
+public interface TagParserStrategy {
 
     /**
      * Returns true if the given character can be part of the tag,

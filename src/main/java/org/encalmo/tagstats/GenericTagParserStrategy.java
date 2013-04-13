@@ -10,11 +10,11 @@ package org.encalmo.tagstats;
  * <li> New lines, carriage returns, tabs and any white space are excluded.
  * </ul>
  */
-public class GenericTagParseStrategy implements TagParseStrategy {
+public class GenericTagParserStrategy implements TagParserStrategy {
 
     private final int minTagLength;
 
-    public GenericTagParseStrategy(int minTagLength) {
+    public GenericTagParserStrategy(int minTagLength) {
         this.minTagLength = minTagLength;
     }
 

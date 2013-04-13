@@ -40,7 +40,7 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
 
     public TagStatsService(TagStatsServiceConfig config) throws Exception {
 
-        if (config.getTagParseStrategy() == null)
+        if (config.getTagParserStrategy() == null)
             throw new AssertionError("config parameter 'parserStrategy' should not be null");
         if (config.getThreads() < 1)
             throw new AssertionError("config parameter 'threads' should equal or greater than 1");
@@ -49,7 +49,7 @@ public class TagStatsService implements TagStats<String>, TagParser, FileParser,
         final TagStatsSet<String> tags = new TagStatsSet<>();
 
         this.tagStatsActor = new TagStatsActor<>(tags);
-        final TagParser parser = new GenericTagParser(tagStatsActor, config.getTagParseStrategy());
+        final TagParser parser = new GenericTagParser(tagStatsActor, config.getTagParserStrategy());
         this.tagParserActor = new TagParserActor(parser, config.getThreads());
         this.fileParserActor = new FileParserActor(tagParserActor);
 

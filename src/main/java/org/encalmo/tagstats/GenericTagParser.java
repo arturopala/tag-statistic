@@ -6,13 +6,13 @@ import java.nio.CharBuffer;
 
 
 /**
- * GenericTagParser parses stream of characters into tags and updates TagStatsSet on the go.
+ * GenericTagParser parses stream of characters into tags using {@link TagParserStrategy} and updates TagStatsSet on the go.
  */
 public class GenericTagParser implements TagParser {
     private final TagStats<String> tagStats;
-    private final TagParseStrategy parseStrategy;
+    private final TagParserStrategy parseStrategy;
 
-    public GenericTagParser(TagStats<String> tagStats, TagParseStrategy parseStrategy) {
+    public GenericTagParser(TagStats<String> tagStats, TagParserStrategy parseStrategy) {
         if (tagStats == null) {
             throw new AssertionError("tagStats must not be null");
         }
@@ -41,7 +41,7 @@ public class GenericTagParser implements TagParser {
             long t1 = System.nanoTime();
             System.out.println("[" + Thread.currentThread().getName() + "] " + counter + " characters long text parsed in " + (int) ((t1 - t0) / 1000000d) + "ms");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ParsingException("<reader>", e);
         } finally {
             try {
                 reader.close();

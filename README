@@ -30,7 +30,7 @@ TagStatsService aggregates several components linked by few interfaces and worki
 
 Interfaces:
 - TagStats<T> is an interface of components gathering tags and providing top stats.
-- TagParseStrategy is an interface of tags parsing strategies.
+- TagParserStrategy is an interface of tags parsing strategies.
 - TagParser is an interface of components parsing streams into tags.
 - FileParser is an interface of components parsing files.
 

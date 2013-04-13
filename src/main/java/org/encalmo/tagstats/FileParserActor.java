@@ -1,5 +1,6 @@
 package org.encalmo.tagstats;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -26,13 +27,22 @@ public class FileParserActor extends Actor<Path> implements FileParser {
 
     @Override
     public void parse(Path path) {
-        enqueue(path);
+        try {
+            enqueue(path);
+        } catch (Exception e) {
+            throw new ParsingException(path.toString(), e);
+        }
     }
 
     @Override
-    protected void react(Path path) throws Exception {
+    protected void react(Path path) {
         if (Files.isReadable(path)) {
-            Reader reader = Files.newBufferedReader(path, Charset.defaultCharset());
+            Reader reader;
+            try {
+                reader = Files.newBufferedReader(path, Charset.defaultCharset());
+            } catch (IOException e) {
+                throw new RuntimeException("Cannot open file " + path.toString());
+            }
             System.out.println("[" + Thread.currentThread().getName() + "] new file to parse " + path);
             parser.parse(reader);
         } else {

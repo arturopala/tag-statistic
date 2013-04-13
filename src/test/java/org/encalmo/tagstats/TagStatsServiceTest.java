@@ -56,7 +56,11 @@ public class TagStatsServiceTest {
             @Override
             public void run() {
                 for (int i = 0; i < 1000; i++) {
-                    service.parse(Paths.get("src/test/resources/text" + (i % 5 + 1) + ".txt"));
+                    try {
+                        service.parse(Paths.get("src/test/resources/text" + (i % 5 + 1) + ".txt"));
+                    } catch (Exception e) {
+                        Assert.fail(e.getMessage());
+                    }
                 }
             }
         });

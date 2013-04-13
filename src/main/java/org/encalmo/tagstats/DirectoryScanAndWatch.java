@@ -50,7 +50,7 @@ public class DirectoryScanAndWatch extends SingleThreadService {
         watchKey = null;
     }
 
-    private boolean processInitialFiles() throws Exception {
+    private boolean processInitialFiles() {
         for (File file : this.files) {
             if (file.isFile()) {
                 listener.fileCreated(file.toPath());

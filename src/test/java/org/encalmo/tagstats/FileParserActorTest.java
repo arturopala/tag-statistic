@@ -10,11 +10,11 @@ public class FileParserActorTest {
     public static final CallingThreadExecutor EXECUTOR = new CallingThreadExecutor();
 
     @Test
-    public void shouldParseText1AndReturnTop10Tags() {
+    public void shouldParseText1AndReturnTop10Tags() throws Exception {
         //given
         Path path1 = Paths.get("src/test/resources/text1.txt");
         TagStats<String> s = new TagStatsSet<>();
-        TagParseStrategy ps = new GenericTagParseStrategy(5);
+        TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), EXECUTOR, 1);
         FileParser f = new FileParserActor(p, EXECUTOR, 1);
         //when

@@ -4,16 +4,17 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
-
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Actor is a base abstract class of all asynchronous components, encapsulates message queue and multi-threaded execution details
  *
- * @param <T> type of supported messages
+ * @param <T> type of the supported messages
  */
 public abstract class Actor<T> {
     private final Executor executor;
     private final BlockingQueue<T> queue;
+    private final AtomicBoolean open = new AtomicBoolean(true);
 
     private final Runnable consumer = new Runnable() {
         @Override
@@ -21,8 +22,7 @@ public abstract class Actor<T> {
             try {
                 T message = queue.take();
                 react(message);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (InterruptedException e) {
             }
         }
     };
@@ -36,9 +36,8 @@ public abstract class Actor<T> {
      * Reaction at the message should be implemented here
      *
      * @param message message to be processed
-     * @throws Exception
      */
-    protected abstract void react(T message) throws Exception;
+    protected abstract void react(T message);
 
     /**
      * Puts this message at the end of the queue
@@ -46,11 +45,14 @@ public abstract class Actor<T> {
      * @param message message to be processed in the future
      */
     protected final void enqueue(T message) {
-        try {
-            queue.put(message);
-            executor.execute(consumer);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (open.get()) {
+            try {
+                queue.put(message);
+                executor.execute(consumer);
+            } catch (InterruptedException e) {
+            }
+        } else {
+            throw new ActorAlreadyShutdownException();
         }
     }
 
@@ -66,6 +68,7 @@ public abstract class Actor<T> {
         if (executor instanceof ExecutorService) {
             ((ExecutorService) executor).shutdown();
         }
+        open.set(false);
     }
 
 }
