@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.encalmo.tagstats.TagStatsService</OriginalElement>
+  <nodes>
+    <node x="646.75" y="78.0">org.encalmo.tagstats.DirectoryScanAndWatch</node>
+    <node x="175.75" y="78.0">org.encalmo.tagstats.TagParserActor</node>
+    <node x="298.5" y="196.0">org.encalmo.tagstats.TagStatsService</node>
+    <node x="318.75" y="78.0">org.encalmo.tagstats.MultiplexedServerSocket</node>
+    <node x="0.0" y="0.0">org.encalmo.tagstats.FileParser</node>
+    <node x="309.0" y="274.0">org.encalmo.tagstats.TagStatsApp</node>
+    <node x="545.75" y="0.0">org.encalmo.tagstats.TagStats</node>
+    <node x="511.75" y="78.0">org.encalmo.tagstats.TagStatsActor</node>
+    <node x="182.40384615384613" y="0.0">org.encalmo.tagstats.TagParser</node>
+    <node x="35.75" y="78.0">org.encalmo.tagstats.FileParserActor</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.encalmo.tagstats.TagStatsService" target="org.encalmo.tagstats.TagParser">
+      <point x="-9.769230769230774" y="-14.0" />
+      <point x="352.2307692307692" y="126.0" />
+      <point x="308.25" y="126.0" />
+      <point x="308.25" y="48.0" />
+      <point x="263.77884615384613" y="48.0" />
+      <point x="34.875" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsService" target="org.encalmo.tagstats.TagStatsActor">
+      <point x="29.30769230769232" y="-14.0" />
+      <point x="391.3076923076923" y="146.0" />
+      <point x="597.25" y="146.0" />
+      <point x="28.5" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.FileParserActor" target="org.encalmo.tagstats.FileParser">
+      <point x="-30.0" y="-14.0" />
+      <point x="65.75" y="58.0" />
+      <point x="68.25" y="58.0" />
+      <point x="22.75" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsService" target="org.encalmo.tagstats.FileParser">
+      <point x="-58.61538461538464" y="-14.0" />
+      <point x="303.38461538461536" y="176.0" />
+      <point x="25.25" y="176.0" />
+      <point x="25.25" y="58.0" />
+      <point x="22.75" y="58.0" />
+      <point x="-22.75" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagParserActor" target="org.encalmo.tagstats.TagParser">
+      <point x="30.5" y="-14.0" />
+      <point x="267.25" y="58.0" />
+      <point x="240.52884615384613" y="58.0" />
+      <point x="11.625" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsService" target="org.encalmo.tagstats.DirectoryScanAndWatch">
+      <point x="48.84615384615387" y="-14.0" />
+      <point x="410.84615384615387" y="166.0" />
+      <point x="688.5" y="166.0" />
+      <point x="-41.75" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsService" target="org.encalmo.tagstats.FileParserActor">
+      <point x="-39.076923076923094" y="-14.0" />
+      <point x="322.9230769230769" y="156.0" />
+      <point x="125.75" y="156.0" />
+      <point x="30.0" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsService" target="org.encalmo.tagstats.MultiplexedServerSocket">
+      <point x="0.0" y="-14.0" />
+      <point x="-43.25" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsService" target="org.encalmo.tagstats.TagParserActor">
+      <point x="-29.30769230769232" y="-14.0" />
+      <point x="332.6923076923077" y="146.0" />
+      <point x="206.25" y="146.0" />
+      <point x="-30.5" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsService" target="org.encalmo.tagstats.TagStats">
+      <point x="39.076923076923094" y="-14.0" />
+      <point x="401.0769230769231" y="156.0" />
+      <point x="636.25" y="156.0" />
+      <point x="636.25" y="58.0" />
+      <point x="616.5833333333334" y="58.0" />
+      <point x="28.33333333333337" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsActor" target="org.encalmo.tagstats.TagStats">
+      <point x="-28.5" y="-14.0" />
+      <point x="540.25" y="58.0" />
+      <point x="559.9166666666666" y="58.0" />
+      <point x="-28.33333333333337" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.TagStatsApp" target="org.encalmo.tagstats.TagStatsService">
+      <point x="0.0" y="-14.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="org.encalmo.tagstats.FileParserActor" target="org.encalmo.tagstats.TagParser">
+      <point x="30.0" y="-14.0" />
+      <point x="125.75" y="58.0" />
+      <point x="194.02884615384613" y="58.0" />
+      <point x="-34.875" y="14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="407.0" y="151.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
