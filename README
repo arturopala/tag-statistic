@@ -6,7 +6,7 @@ java -cp {tagstats.jar} org.encalmo.tagstats.TagStatsApp -p {serverSocketPort} -
 
 2. Options:
 
--p Telnet serverSocketPort number on which the application would serve real time tag query requests.
+-p Telnet port number on which the application would serve real time tag query requests.
 -d Relative or absolute path to base directory to scan for text files.
 -t (optional) Number of parallel threads dedicated to parsing files.
 -s (optional) Size of maintained top list, default 10.
@@ -22,7 +22,7 @@ Symbols, Space or punctuation marks are counted as tags.
 New lines, carriage returns, tabs and any white space are excluded.
 When the application completes processing it writes to standard output the top 10 tag list (neatly formatted) 
 sorted in descending order based on number of occurrences.
-The application accepts multiple connections on serverSocketPort specified (as a command line parameter, -p).
+The application accepts multiple connections on the port specified (as a command line parameter, -p).
 When the connection is made, the application prints the top 10 tag list (line by line) sorted in descending 
 order based on the number of occurrences and closes the connection immediately.
 

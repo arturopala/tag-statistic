@@ -25,7 +25,7 @@ public class TagStatsServiceConfig {
     }
 
     /**
-     * Local server socket serverSocketPort number or -1 if server not enabled
+     * Local server socket port number or -1 if server not enabled
      */
     public int getServerSocketPort() {
         return serverSocketPort;
