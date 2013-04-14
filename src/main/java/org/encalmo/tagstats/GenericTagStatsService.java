@@ -19,12 +19,12 @@ public class GenericTagStatsService implements TagStatsService, ManageableServic
     private final MultiplexedServerSocket server;
     private final DirectoryScanAndWatch watch;
 
-    private final TagStats<String> tagStats;
+    private final TagSet<String> tagSet;
     private final FileParser fileParser;
     private final TagParser tagParser;
 
-    public GenericTagStatsService(TagStats<String> tagStats, TagParser tagParser, FileParser fileParser, MultiplexedServerSocket server, DirectoryScanAndWatch watch) {
-        this.tagStats = tagStats;
+    public GenericTagStatsService(TagSet<String> tagSet, TagParser tagParser, FileParser fileParser, MultiplexedServerSocket server, DirectoryScanAndWatch watch) {
+        this.tagSet = tagSet;
         this.tagParser = tagParser;
         this.fileParser = fileParser;
         this.server = server;
@@ -63,17 +63,17 @@ public class GenericTagStatsService implements TagStatsService, ManageableServic
 
     @Override
     public void increment(String tag) {
-        tagStats.increment(tag);
+        tagSet.increment(tag);
     }
 
     @Override
     public Iterable<String> top() {
-        return tagStats.top();
+        return tagSet.top();
     }
 
     @Override
-    public int total() {
-        return tagStats.total();
+    public int size() {
+        return tagSet.size();
     }
 
     @Override

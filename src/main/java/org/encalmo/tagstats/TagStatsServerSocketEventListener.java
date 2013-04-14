@@ -16,11 +16,11 @@ import java.nio.charset.CharsetEncoder;
  * @see GenericTagStatsService
  */
 public class TagStatsServerSocketEventListener implements ServerSocketEventListener {
-    private final TagStats<String> tags;
+    private final TagSet<String> tagSet;
     private final Charset charset;
 
-    public TagStatsServerSocketEventListener(TagStats<String> tags, Charset charset) {
-        this.tags = tags;
+    public TagStatsServerSocketEventListener(TagSet<String> tagSet, Charset charset) {
+        this.tagSet = tagSet;
         this.charset = charset;
     }
 
@@ -33,7 +33,7 @@ public class TagStatsServerSocketEventListener implements ServerSocketEventListe
     public void write(SelectionKey key) throws Exception {
         SocketChannel channel = (SocketChannel) key.channel();
         CharsetEncoder encoder = charset.newEncoder();
-        Iterable<String> top = tags.top();
+        Iterable<String> top = tagSet.top();
         StringBuffer stringBuffer = new StringBuffer();
         for (String tag : top) {
             stringBuffer.append(tag);

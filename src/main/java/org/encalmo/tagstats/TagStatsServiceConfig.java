@@ -60,7 +60,7 @@ public class TagStatsServiceConfig {
     }
 
     /**
-     * At how many increment steps {@link TagStatsSet} should update the top list
+     * At how many increment steps {@link GenericTagSet} should update the top list
      */
     public int getTopListUpdateAccuracy() {
         return topListUpdateAccuracy;

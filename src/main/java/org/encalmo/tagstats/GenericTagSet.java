@@ -7,14 +7,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 /**
- * TagStatsSet maintains in-memory doubly-linked ordered list of tags and current TopN list.
+ * GenericTagSet maintains in-memory doubly-linked ordered list of tags and current TopN list.
  * Instances of this class are NOT thread-safe.
  *
  * @param <T> type of tags
- * @see TagStatsActor
+ * @see TagSetActor
  * @see GenericTagStatsService
  */
-public final class TagStatsSet<T> implements TagStats<T> {
+public final class GenericTagSet<T> implements TagSet<T> {
 
     private final int topListSize;
     private final int topListUpdateAccuracy;
@@ -23,7 +23,7 @@ public final class TagStatsSet<T> implements TagStats<T> {
      * @param topListSize           the size of the maintained top list
      * @param topListUpdateAccuracy at how many increment steps should we update the top list
      */
-    TagStatsSet(int topListSize, int topListUpdateAccuracy) {
+    GenericTagSet(int topListSize, int topListUpdateAccuracy) {
         this.topListSize = topListSize;
         this.topListUpdateAccuracy = topListUpdateAccuracy;
         this.steps = topListUpdateAccuracy;
@@ -78,7 +78,7 @@ public final class TagStatsSet<T> implements TagStats<T> {
     }
 
     @Override
-    public int total() {
+    public int size() {
         return total;
     }
 

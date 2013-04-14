@@ -4,9 +4,9 @@ import java.net.InetSocketAddress;
 import java.nio.file.Path;
 
 /**
- * Aggregated interface of TagStats related services.
+ * Aggregated interface of TagSet related services.
  */
-public interface TagStatsService extends TagStats<String>, TagParser, FileParser {
+public interface TagStatsService extends TagSet<String>, TagParser, FileParser {
 
     InetSocketAddress getAddress();
 

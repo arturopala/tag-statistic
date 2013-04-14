@@ -20,7 +20,7 @@ public class FileParserActorTest {
     public void shouldParseText1AndReturnTop10Tags() throws Exception {
         //given
         Path path1 = Paths.get("src/test/resources/text1.txt");
-        final TagStats<String> s = new TagStatsSet<>(10, 1);
+        final TagSet<String> s = new GenericTagSet<>(10, 1);
         TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), EXECUTOR, 1);
         FileParser f = new FileParserActor(p, EXECUTOR, 1);
@@ -47,7 +47,7 @@ public class FileParserActorTest {
         //given
         final SynchronousQueue<Boolean> hand = new SynchronousQueue<>();
         Path path1 = Paths.get("src/test/resources/text1.txt");
-        final TagStats<String> s = new TagStatsSet<>(10, 1);
+        final TagSet<String> s = new GenericTagSet<>(10, 1);
         TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), Executors.newSingleThreadExecutor(), 1);
         FileParser f = new FileParserActor(p, Executors.newSingleThreadExecutor(), 1);
@@ -78,7 +78,7 @@ public class FileParserActorTest {
         //given
         final SynchronousQueue<Boolean> hand = new SynchronousQueue<>();
         Path path1 = Paths.get("src/test/resources/text1000.txt");
-        final TagStats<String> s = new TagStatsSet<>(10, 1);
+        final TagSet<String> s = new GenericTagSet<>(10, 1);
         TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), Executors.newSingleThreadExecutor(), 10);
         FileParser f = new FileParserActor(p, Executors.newSingleThreadExecutor(), 10);

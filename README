@@ -28,27 +28,26 @@ order based on the number of occurrences and closes the connection immediately.
 
 4. Architecture:
 
-TagStatsService aggregates several components linked by few interfaces and working together in a multi-threaded, non-blocking, asynchronous way achieved using "Actor" pattern.
+TagStatsApp aggregates several components linked by few interfaces and working together in a multi-threaded, non-blocking, asynchronous way achieved using "Actor" pattern.
 
 Interfaces:
-- TagStats<T> is an interface of components gathering tags and providing top stats.
+- TagSet<T> is an interface of components gathering tags and providing top list.
 - TagParserStrategy is an interface of tags parsing strategies.
 - TagParser is an interface of components parsing streams into tags.
 - FileParser is an interface of components parsing files.
+- TagStatsService aggregates TagParser, FileParser and TagStats
 
 Abstract classes:
-- Actor is a base abstract class of all asynchronous components, 
-  encapsulates message queue and multi-threaded execution details
-- SingleThreadService is a base abstract class of manageable services running in the single dedicated thread, 
-  encapsulates asynchronous stop/start execution details
+- Actor is a base abstract class of all asynchronous components, encapsulates message queue and multi-threaded execution details
+- SingleThreadService is a base abstract class of manageable services running in the single dedicated thread, encapsulates asynchronous stop/start execution details
 
 Components:
-- TagStatsApp acts as a TagStatsService launcher.
-- TagStatsService is a starting point and components configurator.
-- TagStatsSet maintains in-memory doubly-linked ordered list of tags and current TopN stats.
-- TagStatsActor encapsulates TagStatsSet and process all inserts using long queue and single thread to avoid synchronization of concurrent inserts inside TagStatsSet.
+- TagStatsApp acts as a TagStatsService launcher, uses TagStatsServiceFactory and TagStatsServiceConfig.
+- GenericTagStatsService is main aggregating component.
+- GenericTagSet maintains in-memory doubly-linked ordered list of tags and current TopN stats.
+- TagSetActor encapsulates GenericTagSet and process all inserts using long queue and single thread to avoid synchronization of concurrent inserts inside GenericTagSet.
 - GenericTagParserStrategy encapsulates default parsing rules
-- GenericTagParser parses stream of characters into tags and updates TagStatsSet on the go.
+- GenericTagParser parses stream of characters into tags and updates TagSet on the go.
 - TagParserActor encapsulates GenericTagParser and processes streams using multiple threads and short queue to avoid keeping them open too long.
 - FileParserActor encapsulates TagParserActor and acts as a proxy responsible of queueing and opening files before they reach the TagParserActor.
 - DirectoryWatchAndScan observes baseDirectory and notifies FileParserActor about new files to parse, uses TagStatsFileEventListener.

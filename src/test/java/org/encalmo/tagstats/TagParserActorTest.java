@@ -20,7 +20,7 @@ public class TagParserActorTest {
     public void shouldParseStringAndReturnTop10Tags() throws Exception {
         //given
         Reader r = new StringReader(TestData.TEST_STRING_1);
-        final TagStats<String> s = new TagStatsSet<>(10, 1);
+        final TagSet<String> s = new GenericTagSet<>(10, 1);
         TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), EXECUTOR, 1);
         Callback callback = new Callback() {
@@ -46,7 +46,7 @@ public class TagParserActorTest {
         //given
         final SynchronousQueue<Boolean> hand = new SynchronousQueue<>();
         Reader r = new StringReader(TestData.TEST_STRING_1);
-        final TagStats<String> s = new TagStatsSet<>(10, 1);
+        final TagSet<String> s = new GenericTagSet<>(10, 1);
         TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), Executors.newSingleThreadExecutor(), 1);
         Callback callback = new Callback() {
@@ -76,7 +76,7 @@ public class TagParserActorTest {
         //given
         final SynchronousQueue<Boolean> hand = new SynchronousQueue<>();
         Reader r = new StringReader(TestData.TEST_STRING_1);
-        final TagStats<String> s = new TagStatsSet<>(10, 1);
+        final TagSet<String> s = new GenericTagSet<>(10, 1);
         TagParserStrategy ps = new GenericTagParserStrategy(5);
         TagParser p = new TagParserActor(new GenericTagParser(s, ps), Executors.newSingleThreadExecutor(), 1);
         Callback callback = new Callback() {

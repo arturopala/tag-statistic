@@ -8,21 +8,21 @@ import java.nio.CharBuffer;
 
 
 /**
- * GenericTagParser parses stream of characters into tags using {@link TagParserStrategy} and updates {@link TagStats} on the go.
+ * GenericTagParser parses stream of characters into tags using {@link TagParserStrategy} and updates {@link TagSet} on the go.
  */
 public class GenericTagParser implements TagParser {
-    private final TagStats<String> tagStats;
-    private final TagParserStrategy parseStrategy;
+    private final TagSet<String> tagSet;
+    private final TagParserStrategy parserStrategy;
 
-    public GenericTagParser(TagStats<String> tagStats, TagParserStrategy parseStrategy) {
-        if (tagStats == null) {
-            throw new AssertionError("tagStats must not be null");
+    public GenericTagParser(TagSet<String> tagSet, TagParserStrategy parserStrategy) {
+        if (tagSet == null) {
+            throw new AssertionError("tagSet must not be null");
         }
-        if (parseStrategy == null) {
-            throw new AssertionError("parseStrategy must not be null");
+        if (parserStrategy == null) {
+            throw new AssertionError("parserStrategy must not be null");
         }
-        this.tagStats = tagStats;
-        this.parseStrategy = parseStrategy;
+        this.tagSet = tagSet;
+        this.parserStrategy = parserStrategy;
     }
 
     @Override
@@ -36,10 +36,10 @@ public class GenericTagParser implements TagParser {
         int i;
         try {
             while ((i = reader.read()) != -1) {
-                processCharacter((char) i, buffer, tagStats);
+                processCharacter((char) i, buffer, tagSet);
                 counter++;
             }
-            processCharacter(' ', buffer, tagStats);
+            processCharacter(' ', buffer, tagSet);
             long t1 = System.nanoTime();
             System.out.println("[" + Thread.currentThread().getName() + "] " + counter + " characters long text parsed in " + (int) ((t1 - t0) / 1000000d) + "ms");
             callback.success();
@@ -53,20 +53,20 @@ public class GenericTagParser implements TagParser {
         }
     }
 
-    protected void processCharacter(char ch, CharBuffer buffer, TagStats<String> stats) {
+    protected void processCharacter(char ch, CharBuffer buffer, TagSet<String> stats) {
         ch = Character.toLowerCase(ch);
-        if (parseStrategy.isTagDelimiter(ch)) {
+        if (parserStrategy.isTagDelimiter(ch)) {
             registerTagOccurrence(buffer, stats);
-        } else if (parseStrategy.isValidTagCharacter(ch)) {
+        } else if (parserStrategy.isValidTagCharacter(ch)) {
             rememberCharacter(ch, buffer);
         }
     }
 
-    protected void registerTagOccurrence(CharBuffer buffer, TagStats<String> stats) {
+    protected void registerTagOccurrence(CharBuffer buffer, TagSet<String> stats) {
         if (buffer.remaining() > 0) {
             String tag = pollTag(buffer);
-            String refinedTag = parseStrategy.refineTag(tag);
-            if (refinedTag != null && parseStrategy.isValidTag(refinedTag)) {
+            String refinedTag = parserStrategy.refineTag(tag);
+            if (refinedTag != null && parserStrategy.isValidTag(refinedTag)) {
                 stats.increment(refinedTag);
             }
         } else {

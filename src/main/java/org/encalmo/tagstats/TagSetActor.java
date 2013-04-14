@@ -8,20 +8,20 @@ import java.util.concurrent.Executors;
 
 
 /**
- * TagStatsActor encapsulates TagStatsSet and process all inserts using long queue
- * and single thread to avoid synchronization of concurrent inserts inside TagStatsSet.
+ * TagSetActor encapsulates GenericTagSet and process all inserts using long queue
+ * and single thread to avoid synchronization of concurrent inserts inside GenericTagSet.
  *
  * @param <T> type of tags
  */
-public class TagStatsActor<T> extends Actor<T> implements TagStats<T> {
+public class TagSetActor<T> extends Actor<T> implements TagSet<T> {
 
-    private TagStats<T> tags;
+    private TagSet<T> tags;
 
-    public TagStatsActor(TagStats<T> tags) {
+    public TagSetActor(TagSet<T> tags) {
         this(tags, Executors.newSingleThreadExecutor());
     }
 
-    protected TagStatsActor(TagStats<T> tags, Executor executor) {
+    protected TagSetActor(TagSet<T> tags, Executor executor) {
         super(executor, 1024);
         this.tags = tags;
     }
@@ -48,7 +48,7 @@ public class TagStatsActor<T> extends Actor<T> implements TagStats<T> {
     }
 
     @Override
-    public int total() {
-        return tags.total();
+    public int size() {
+        return tags.size();
     }
 }

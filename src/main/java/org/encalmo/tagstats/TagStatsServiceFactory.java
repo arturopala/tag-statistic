@@ -23,7 +23,7 @@ public class TagStatsServiceFactory {
      * @param config configuration parameters
      * @throws Exception
      * @see GenericTagStatsService
-     * @see TagStatsActor
+     * @see TagSetActor
      * @see TagParserActor
      * @see FileParserActor
      */
@@ -38,10 +38,10 @@ public class TagStatsServiceFactory {
             throw new AssertionError("config parameter 'accuracy' should be equal or greater than 1 and less than 100");
 
         final Charset charset = Charset.defaultCharset();
-        final TagStatsSet<String> tags = new TagStatsSet<>(config.getTopListSize(), config.getTopListUpdateAccuracy());
+        final GenericTagSet<String> tags = new GenericTagSet<>(config.getTopListSize(), config.getTopListUpdateAccuracy());
 
-        final TagStats<String> tagStats = new TagStatsActor<>(tags);
-        final TagParser parser = new GenericTagParser(tagStats, config.getTagParserStrategy());
+        final TagSet<String> tagSet = new TagSetActor<>(tags);
+        final TagParser parser = new GenericTagParser(tagSet, config.getTagParserStrategy());
         TagParser tagParser = new TagParserActor(parser, config.getNumberOfThreads());
         FileParser fileParser = new FileParserActor(tagParser);
         MultiplexedServerSocket server;
@@ -57,8 +57,8 @@ public class TagStatsServiceFactory {
             watch = new DirectoryScanAndWatch(path, new TagStatsFileEventListener(fileParser), Callbacks.wrap(new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("\r\nTop tags (from all " + tagStats.total() + "):\r\n-------------------");
-                    for (String tag : tagStats.top()) {
+                    System.out.println("\r\nTop tags (from all " + tagSet.size() + "):\r\n-------------------");
+                    for (String tag : tagSet.top()) {
                         System.out.println(tag);
                     }
                 }
@@ -66,6 +66,6 @@ public class TagStatsServiceFactory {
         } else {
             watch = null;
         }
-        return new GenericTagStatsService(tagStats, tagParser, fileParser, server, watch);
+        return new GenericTagStatsService(tagSet, tagParser, fileParser, server, watch);
     }
 }
