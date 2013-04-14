@@ -1,5 +1,7 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.actor.Callback;
+
 import java.io.Reader;
 
 
@@ -8,10 +10,10 @@ import java.io.Reader;
  *
  * @see GenericTagParser
  * @see TagParserActor
- * @see TagStatsService
+ * @see GenericTagStatsService
  */
 public interface TagParser {
 
-    void parse(Reader reader);
+    void parse(Reader reader, Callback callback);
 
 }

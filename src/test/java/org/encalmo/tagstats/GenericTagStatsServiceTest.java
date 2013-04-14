@@ -1,6 +1,8 @@
 package org.encalmo.tagstats;
 
 import junit.framework.Assert;
+import org.encalmo.actor.Callback;
+import org.encalmo.util.AssertThat;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -9,8 +11,12 @@ import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
-public class TagStatsServiceTest {
+import static org.junit.Assert.assertNotNull;
+
+public class GenericTagStatsServiceTest {
 
     @Test
     public void shouldParseFilesFromDirectoryAndReturnTop10Tags() throws Exception {
@@ -18,7 +24,7 @@ public class TagStatsServiceTest {
         TagStatsServiceConfig config = new TagStatsServiceConfig();
         config.setServerSocketPort(33568);
         config.setBaseDirectory("src/test/resources");
-        TagStatsService service = new TagStatsService(config);
+        GenericTagStatsService service = TagStatsServiceFactory.createAsynchronous(config);
         AssertThat.isEmpty(service.top());
         //when
         service.start();
@@ -34,22 +40,48 @@ public class TagStatsServiceTest {
     @Test
     public void shouldParseFilesAndServeTop10RequestsInMultipleThreads() throws Exception {
         //given
+        final SynchronousQueue<Boolean> hand = new SynchronousQueue<>();
         TagStatsServiceConfig config = new TagStatsServiceConfig();
         config.setServerSocketPort(33568);
-        final TagStatsService service = new TagStatsService(config);
+        final GenericTagStatsService service = TagStatsServiceFactory.createAsynchronous(config);
         final InetSocketAddress address = service.getAddress();
         AssertThat.isEmpty(service.top());
+        final Callback callback = new Callback() {
+            @Override
+            public void success() {
+                //then
+                try {
+                    AssertThat.sameElements(service.top(), TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
+                    String[] response = TagStatsClient.readTop10TagsFromSocket(address, Charset.defaultCharset());
+                    AssertThat.sameElements(response, TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
+                    service.stop();
+                    hand.offer(true);
+                } catch (Exception e) {
+                    hand.offer(false);
+                }
+            }
+
+            @Override
+            public void failure(Throwable cause) {
+                hand.offer(false);
+            }
+        };
         //when
         service.start();
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 1000; i++) {
+                for (int i = 0; i < 999; i++) {
                     try {
-                        service.parse(Paths.get("src/test/resources/text" + (i % 5 + 1) + ".txt"));
+                        service.parse(Paths.get("src/test/resources/text" + (i % 5 + 1) + ".txt"), Callback.EMPTY);
                     } catch (Exception e) {
-                        Assert.fail(e.getMessage());
+                        hand.offer(false);
                     }
+                }
+                try {
+                    service.parse(Paths.get("src/test/resources/text5.txt"), callback);
+                } catch (Exception e) {
+                    hand.offer(false);
                 }
             }
         });
@@ -67,14 +99,8 @@ public class TagStatsServiceTest {
                 }
             });
         }
-        while (!service.isParsingQueueEmpty()) {
-            Thread.sleep(1000);
-        }
-        //then
-        AssertThat.sameElements(service.top(), TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
-        String[] response = TagStatsClient.readTop10TagsFromSocket(address, Charset.defaultCharset());
-        AssertThat.sameElements(response, TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
-        service.stop();
+        Boolean done = hand.poll(10, TimeUnit.SECONDS);
+        assertNotNull(done);
     }
 
 }

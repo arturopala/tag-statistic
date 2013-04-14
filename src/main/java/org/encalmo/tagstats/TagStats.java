@@ -6,7 +6,7 @@ package org.encalmo.tagstats;
  * @param <T> type of the tags
  * @see TagStatsSet
  * @see TagStatsActor
- * @see TagStatsService
+ * @see GenericTagStatsService
  */
 public interface TagStats<T> {
 

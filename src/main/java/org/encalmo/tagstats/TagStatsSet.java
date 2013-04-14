@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @param <T> type of tags
  * @see TagStatsActor
- * @see TagStatsService
+ * @see GenericTagStatsService
  */
 public final class TagStatsSet<T> implements TagStats<T> {
 

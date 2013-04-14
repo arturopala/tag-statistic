@@ -1,43 +1,25 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.actor.Callback;
+import org.encalmo.nio.SimpleFileEventListener;
+
 import java.nio.file.Path;
 
 /**
- * Prints out TopN tags after all initial text files were processed.
+ * Parses newly added files.
  *
- * @see DirectoryScanAndWatch
- * @see TagStatsService
+ * @see org.encalmo.nio.DirectoryScanAndWatch
+ * @see GenericTagStatsService
  */
 public class TagStatsFileEventListener extends SimpleFileEventListener {
-    private final FileParserActor fileParserActor;
-    private final TagStatsActor<String> tagStatsActor;
+    private final FileParser fileParser;
 
-    public TagStatsFileEventListener(FileParserActor fileParserActor, TagStatsActor<String> tagStatsActor) {
-        this.fileParserActor = fileParserActor;
-        this.tagStatsActor = tagStatsActor;
+    public TagStatsFileEventListener(FileParser fileParser) {
+        this.fileParser = fileParser;
     }
 
     @Override
-    public void fileCreated(Path path) {
-        fileParserActor.parse(path);
-    }
-
-    @Override
-    public boolean initialFilesAlreadyProcessed() {
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-        }
-        while (!tagStatsActor.isQueueEmpty()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-        System.out.println("\r\nTop tags (from all " + tagStatsActor.total() + "):\r\n-------------------");
-        for (String tag : tagStatsActor.top()) {
-            System.out.println(tag);
-        }
-        return true;
+    public void fileCreated(Path path, Callback callback) {
+        fileParser.parse(path, callback);
     }
 }

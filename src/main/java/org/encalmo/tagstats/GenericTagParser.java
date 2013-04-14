@@ -1,5 +1,7 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.actor.Callback;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.CharBuffer;
@@ -24,7 +26,7 @@ public class GenericTagParser implements TagParser {
     }
 
     @Override
-    public void parse(Reader reader) {
+    public void parse(Reader reader, Callback callback) {
         if (reader == null) {
             throw new AssertionError("reader must not be null");
         }
@@ -40,8 +42,9 @@ public class GenericTagParser implements TagParser {
             processCharacter(' ', buffer, tagStats);
             long t1 = System.nanoTime();
             System.out.println("[" + Thread.currentThread().getName() + "] " + counter + " characters long text parsed in " + (int) ((t1 - t0) / 1000000d) + "ms");
-        } catch (IOException e) {
-            throw new ParsingException("<reader>", e);
+            callback.success();
+        } catch (Exception e) {
+            callback.failure(e);
         } finally {
             try {
                 reader.close();

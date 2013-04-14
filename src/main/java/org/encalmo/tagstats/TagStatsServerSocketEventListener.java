@@ -1,5 +1,7 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.nio.ServerSocketEventListener;
+
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
@@ -8,10 +10,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
 /**
- * Writes out TopN tags to the socket channel and closes.
+ * Writes out TopN tags to the socket channel and closes it.
  *
- * @see MultiplexedServerSocket
- * @see TagStatsService
+ * @see org.encalmo.nio.MultiplexedServerSocket
+ * @see GenericTagStatsService
  */
 public class TagStatsServerSocketEventListener implements ServerSocketEventListener {
     private final TagStats<String> tags;

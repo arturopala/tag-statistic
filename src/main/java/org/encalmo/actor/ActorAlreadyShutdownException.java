@@ -1,4 +1,4 @@
-package org.encalmo.tagstats;
+package org.encalmo.actor;
 
 public class ActorAlreadyShutdownException extends RuntimeException {
 }

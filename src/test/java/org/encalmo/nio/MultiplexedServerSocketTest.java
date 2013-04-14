@@ -1,4 +1,4 @@
-package org.encalmo.tagstats;
+package org.encalmo.nio;
 
 import junit.framework.Assert;
 import org.junit.Test;

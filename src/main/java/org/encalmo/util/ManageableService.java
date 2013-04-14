@@ -1,10 +1,10 @@
-package org.encalmo.tagstats;
+package org.encalmo.util;
 
 /**
  * Interface of manageable components, i.e. able to be started and stopped
  *
- * @see SingleThreadService
- * @see TagStatsService
+ * @see org.encalmo.util.SingleThreadService
+ * @see org.encalmo.tagstats.GenericTagStatsService
  */
 public interface ManageableService {
 

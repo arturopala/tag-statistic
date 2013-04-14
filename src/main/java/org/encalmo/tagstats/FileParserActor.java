@@ -1,5 +1,8 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.actor.Actor;
+import org.encalmo.actor.Callback;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -26,27 +29,22 @@ public class FileParserActor extends Actor<Path> implements FileParser {
     }
 
     @Override
-    public void parse(Path path) {
-        try {
-            enqueue(path);
-        } catch (Exception e) {
-            throw new ParsingException(path.toString(), e);
-        }
+    public void parse(Path path, Callback callback) {
+        enqueue(path, callback);
     }
 
     @Override
-    protected void react(Path path) {
+    protected void react(Path path, Callback callback) {
         if (Files.isReadable(path)) {
-            Reader reader;
             try {
-                reader = Files.newBufferedReader(path, Charset.defaultCharset());
+                Reader reader = Files.newBufferedReader(path, Charset.defaultCharset());
+                System.out.println("[" + Thread.currentThread().getName() + "] new file to parse " + path);
+                parser.parse(reader, callback);
             } catch (IOException e) {
-                throw new RuntimeException("Cannot open file " + path.toString());
+                callback.failure(new IOException("Cannot open file " + path.toString()));
             }
-            System.out.println("[" + Thread.currentThread().getName() + "] new file to parse " + path);
-            parser.parse(reader);
         } else {
-            System.err.println("File " + path + " is not readable! Cannot parse tags.");
+            callback.failure(new IOException("Path not readable " + path.toString()));
         }
     }
 }

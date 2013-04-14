@@ -1,5 +1,8 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.actor.Actor;
+import org.encalmo.actor.Callback;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -11,6 +14,7 @@ import java.util.concurrent.Executors;
  * @param <T> type of tags
  */
 public class TagStatsActor<T> extends Actor<T> implements TagStats<T> {
+
     private TagStats<T> tags;
 
     public TagStatsActor(TagStats<T> tags) {
@@ -23,8 +27,9 @@ public class TagStatsActor<T> extends Actor<T> implements TagStats<T> {
     }
 
     @Override
-    protected void react(T tag) {
+    protected void react(T tag, Callback callback) {
         tags.increment(tag);
+        callback.success();
     }
 
     @Override

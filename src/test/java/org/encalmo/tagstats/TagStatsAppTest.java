@@ -1,5 +1,7 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.util.AssertThat;
+import org.encalmo.util.ManageableService;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,13 +31,14 @@ public class TagStatsAppTest {
         TagStatsService service = TagStatsApp.start(config);
         AssertThat.isEmpty(service.top());
         //when
-        service.start();
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         //then
         AssertThat.sameElements(service.top(), TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
         InetSocketAddress address = service.getAddress();
         String[] response = TagStatsClient.readTop10TagsFromSocket(address, java.nio.charset.Charset.defaultCharset());
         AssertThat.sameElements(response, TestData.EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES);
-        service.stop();
+        if (service instanceof ManageableService) {
+            ((ManageableService) service).stop();
+        }
     }
 }

@@ -1,5 +1,8 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.actor.Actor;
+import org.encalmo.actor.Callback;
+
 import java.io.Reader;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -22,16 +25,12 @@ public class TagParserActor extends Actor<Reader> implements TagParser {
     }
 
     @Override
-    protected void react(Reader reader) {
-        parser.parse(reader);
+    protected void react(Reader reader, Callback callback) {
+        parser.parse(reader, callback);
     }
 
     @Override
-    public void parse(Reader reader) {
-        try {
-            enqueue(reader);
-        } catch (Exception e) {
-            throw new ParsingException("<reader>", e);
-        }
+    public void parse(Reader reader, Callback callback) {
+        enqueue(reader, callback);
     }
 }

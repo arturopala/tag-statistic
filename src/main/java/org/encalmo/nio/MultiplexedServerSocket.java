@@ -1,4 +1,6 @@
-package org.encalmo.tagstats;
+package org.encalmo.nio;
+
+import org.encalmo.util.SingleThreadService;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,7 +14,7 @@ import java.util.Iterator;
  * MultiplexedServerSocket is a general purpose component encapsulating
  * multiplexed {@link ServerSocketChannel} complexity behind {@link ServerSocketEventListener}.
  * <p/>
- * This component is a {@link SingleThreadService} running in a separate thread.
+ * This component is a {@link org.encalmo.util.SingleThreadService} running in a separate thread.
  */
 public class MultiplexedServerSocket extends SingleThreadService {
 
@@ -98,6 +100,10 @@ public class MultiplexedServerSocket extends SingleThreadService {
         SocketChannel client = serverSocketChannel.accept();
         client.configureBlocking(false);
         client.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+    }
+
+    public InetSocketAddress getAddress() {
+        return address;
     }
 
 }

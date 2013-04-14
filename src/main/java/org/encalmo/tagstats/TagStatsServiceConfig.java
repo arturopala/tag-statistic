@@ -1,7 +1,7 @@
 package org.encalmo.tagstats;
 
 /**
- * Configuration parameters of the {@link TagStatsService}
+ * Configuration parameters of the {@link GenericTagStatsService}
  */
 public class TagStatsServiceConfig {
 

@@ -1,4 +1,4 @@
-package org.encalmo.tagstats;
+package org.encalmo.nio;
 
 import java.nio.channels.SelectionKey;
 

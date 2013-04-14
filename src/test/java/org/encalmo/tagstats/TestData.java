@@ -6,7 +6,10 @@ public class TestData {
     static final String[] EXPECTED_TOP10_TAGS_1 = new String[]{"mleko", "mleko9", "herbata", "k1awa"};
 
     static final String[] EXPECTED_TOP10_TAGS_FROM_SRC_TEST_RESOURCES = new String[]{
-            "ipsum", "vitae", "nulla", "pellentesque", "vestibulum", "mauris", "sapien",
-            "aliquam", "tortor", "dolor"
+            "ipsum", "vitae", "nulla", "pellentesque", "vestibulum", "mauris", "sapien", "aliquam", "tortor", "dolor"
+    };
+
+    static final String[] EXPECTED_TOP10_TAGS_FROM_TEXT1 = new String[]{
+            "ipsum", "adipiscing", "pellentesque", "tortor", "purus", "vitae", "ullamcorper", "dolor", "donec", "libero"
     };
 }

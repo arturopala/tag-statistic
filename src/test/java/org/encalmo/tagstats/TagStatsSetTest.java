@@ -1,5 +1,6 @@
 package org.encalmo.tagstats;
 
+import org.encalmo.util.AssertThat;
 import org.junit.Assert;
 import org.junit.Test;
 
