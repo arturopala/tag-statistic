@@ -9,10 +9,11 @@ package org.encalmo.tagstats;
  * @see GenericTagStatsService
  */
 public interface TagSet<T> {
+  void increment(T tag);
 
-    void increment(T tag);
+  Iterable<T> top();
 
-    Iterable<T> top();
+  int size();
 
-    int size();
+  boolean contains(T tag);
 }
